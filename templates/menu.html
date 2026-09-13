@@ -9,11 +9,11 @@
     <p><a href="/cart">View Cart</a></p>
     <p><a href="/history">Order History</a></p>
     <ul>
-        {% for food, price in orders.items() %}
+               {% for item in menu_items %}
             <li>
-                {{ food }} - {{ price }}
+                {{ item.name }} - {{ item.price }}
                 <form action="/add_order" method="POST" style="display:inline;">
-                    <input type="hidden" name="food" value="{{ food }}">
+                    <input type="hidden" name="food" value="{{ item.name }}">
                     <input type="number" name="quantity" value="1" min="1" style="width:50px;">
                     <input type="text" name="notes" placeholder="e.g. no onions" style="width:120px;">
                     <button type="submit">Add</button>

@@ -7,16 +7,13 @@
 <body>
     <h1>Your Order History</h1>
     {% if orders %}
-        {% for order in orders %}
+      {% for order in orders %}
             <div style="background:white; padding:10px 16px; margin-bottom:10px; border-radius:8px;">
-                <p><strong>{{ order.type }}</strong> — Total: {{ order.total }}</p>
-                <ul>
-                    {% for item in order[items] %}
-                        <li>{{ item }}</li>
-                    {% endfor %}
-                </ul>
+                <p><strong>{{ order.order_type }}</strong> — Total: {{ order.total }}</p>
+                <p>{{ order.items }}</p>
+                <p style="font-size:12px; color:gray;">{{ order.created_at }}</p>
             </div>
-        {% endfor %}
+      {% endfor %}
     {% else %}
         <p>No past orders yet.</p>
     {% endif %}

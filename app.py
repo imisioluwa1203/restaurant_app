@@ -1,18 +1,50 @@
-from flask import Flask, render_template
-from restaurant import Orders, unavailable_food, add_order, remove_order, print_receipt
-from  flask import Flask, render_template, request, redirect
 from flask import Flask, render_template, request, redirect, session
+from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
+import os
 
+from restaurant import Orders, unavailable_food, add_order, remove_order, print_receipt
 
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'acid-treats-secret-key' #needed for sessions to work
+app.secret_key = 'acid-treats-secret-key'
+
+db_user = os.environ.get('DB_USER')
+db_password = os.environ.get('DB_PASSWORD')
+db_host = os.environ.get('DB_HOST')
+db_port = os.environ.get('DB_PORT')
+db_name = os.environ.get('DB_NAME')
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+from models import db, Order, MenuItem
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+
+    if MenuItem.query.count() == 0:
+        starter_menu = {
+            'Rice': 500,
+            'Beans': 300,
+            'Pasta': 200,
+            'Pizza': 15000,
+            'Sharwama': 3000
+        }
+        for name, price in starter_menu.items():
+            db.session.add(MenuItem(name=name, price=price))
+        db.session.commit()
+
 
 
 
 @app.route('/')
 def home():
-    return render_template('menu.html', orders=Orders)
+    menu_items = MenuItem.query.filter_by(available=True).all()
+    return render_template('menu.html', menu_items=menu_items)
+
 
 @app.route('/add_order', methods=['POST'])
 def add():
@@ -42,22 +74,20 @@ def checkout():
     import restaurant
     return render_template('checkout.html', ordered_food=restaurant.Ordered_food, total=restaurant.total_amount_ordered)
 
-
 @app.route('/place_order', methods=['POST'])
 def place_order():
     import restaurant
     order_type = request.form.get('order_type', 'Pickup')
 
-    order_record = {
-        'items': list(restaurant.Ordered_food),
-        'total': restaurant.total_amount_ordered,
-        'type': order_type
-    }
+    items_string = "; ".join(restaurant.Ordered_food)
 
-    if 'order_history' not in session:
-        session['order_history'] = []
-    session['order_history'].append(order_record)
-    session.modified = True
+    new_order = Order(
+        items=items_string,
+        total=restaurant.total_amount_ordered,
+        order_type=order_type
+    )
+    db.session.add(new_order)
+    db.session.commit()
 
     restaurant.Ordered_food.clear()
     restaurant.total_amount_ordered = 0
@@ -65,7 +95,7 @@ def place_order():
 
 @app.route('/history')
 def history():
-    orders = session.get('order_history', [])
+    orders = Order.query.order_by(Order.created_at.desc()).all()
     return render_template('history.html', orders=orders)
 
 
