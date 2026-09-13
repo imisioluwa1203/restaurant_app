@@ -8,6 +8,11 @@
     <h1>ACiD'S TREATS</h1>
     <p><a href="/cart">View Cart</a></p>
     <p><a href="/history">Order History</a></p>
+            {% if current_user.is_authenticated %}
+            <p>Welcome, {{ current_user.username }} | <a href="/logout">Log out</a></p>
+        {% else %}
+            <p><a href="/login">Log In</a> | <a href="/signup">Sign Up</a></p>
+        {% endif %}
     <ul>
                {% for item in menu_items %}
             <li>
