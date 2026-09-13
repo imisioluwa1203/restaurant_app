@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Item - ACiD'S TREATS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Edit {{ item.name }}</h1>
+    <p><a href="/admin">Back to Admin</a></p>
+
+    <form method="POST">
+        <p>
+            <label>Name:</label><br>
+            <input type="text" name="name" value="{{ item.name }}" required>
+        </p>
+        <p>
+            <label>Price:</label><br>
+            <input type="number" name="price" value="{{ item.price }}" required>
+        </p>
+        <button type="submit">Save Changes</button>
+    </form>
+</body>
+</html>

@@ -18,6 +18,7 @@ class MenuItem(db.Model):
     name = db.Column(db.String(50), unique=True, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     available = db.Column(db.Boolean, default=True)
+    image_url = db.Column(db.String(300))
 
 
 class User(db.Model, UserMixin):

@@ -87,7 +87,7 @@ def checkout():
     if not restaurant.Ordered_food:
         return redirect('/')
 
-    return render_template('checkout.html', ordered_food=restaurant.Ordered_food, total=restaurant.total_amount_ordered)
+    return render_template('checkout.html', ordered_food=restaurant.Ordered_food, total=restaurant.total_amount_ordered, delivery_fee=1000)
 
 @app.route('/place_order', methods=['POST'])
 @login_required
@@ -97,9 +97,15 @@ def place_order():
 
     items_string = "; ".join(restaurant.Ordered_food)
 
+    DELIVERY_FEE = 1000
+
+    total = restaurant.total_amount_ordered
+    if order_type == 'Delivery':
+        total += DELIVERY_FEE
+
     new_order = Order(
         items=items_string,
-        total=restaurant.total_amount_ordered,
+        total=total,
         order_type=order_type,
         user_id=current_user.id if current_user.is_authenticated else None
     )
@@ -126,6 +132,22 @@ def admin():
     menu_items = MenuItem.query.all()
     return render_template('admin.html', menu_items=menu_items)
 
+
+@app.route('/admin/edit/<int:item_id>', methods=['GET', 'POST'])
+@login_required
+def edit_item(item_id):
+    if not current_user.is_admin:
+        return redirect('/')
+
+    item = MenuItem.query.get(item_id)
+
+    if request.method == 'POST':
+        item.name = request.form['name']
+        item.price = request.form['price']
+        db.session.commit()
+        return redirect('/admin')
+
+    return render_template('edit_item.html', item=item)
 
 @app.route('/admin/toggle/<int:item_id>', methods=['POST'])
 @login_required

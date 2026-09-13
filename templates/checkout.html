@@ -14,6 +14,7 @@
             {% endfor %}
         </ul>
         <p class="total">Total: {{ total }}</p>
+         <p style="font-size:0.9em; color:gray;">* Delivery adds a fee of {{ delivery_fee }}</p>
         <form action="/place_order" method="POST">
                 <p>
                     <label><input type="radio" name="order_type" value="Delivery" checked> Delivery</label>

@@ -25,6 +25,7 @@
                 <form method="POST" action="/admin/toggle/{{ item.id }}">
                     <button type="submit">Toggle Availability</button>
                 </form>
+                  <a href="/admin/edit/{{ item.id }}">Edit</a>
             </td>
         </tr>
         {% endfor %}
