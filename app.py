@@ -65,6 +65,7 @@ def add():
     return redirect('/')
 
 @app.route('/cart')
+@login_required
 def cart():
     import restaurant
     return render_template('cart.html', ordered_food=restaurant.Ordered_food, total=restaurant.total_amount_ordered)
@@ -80,11 +81,16 @@ def remove():
     return redirect('/cart')
 
 @app.route('/checkout')
+@login_required
 def checkout():
     import restaurant
+    if not restaurant.Ordered_food:
+        return redirect('/')
+
     return render_template('checkout.html', ordered_food=restaurant.Ordered_food, total=restaurant.total_amount_ordered)
 
 @app.route('/place_order', methods=['POST'])
+@login_required
 def place_order():
     import restaurant
     order_type = request.form.get('order_type', 'Pickup')
@@ -94,7 +100,8 @@ def place_order():
     new_order = Order(
         items=items_string,
         total=restaurant.total_amount_ordered,
-        order_type=order_type
+        order_type=order_type,
+        user_id=current_user.id if current_user.is_authenticated else None
     )
     db.session.add(new_order)
     db.session.commit()
@@ -104,9 +111,47 @@ def place_order():
     return render_template('order_confirmed.html', order_type=order_type)
 
 @app.route('/history')
+@login_required
 def history():
     orders = Order.query.order_by(Order.created_at.desc()).all()
     return render_template('history.html', orders=orders)
+
+
+@app.route('/admin')
+@login_required
+def admin():
+    if not current_user.is_admin:
+        return redirect('/')
+
+    menu_items = MenuItem.query.all()
+    return render_template('admin.html', menu_items=menu_items)
+
+
+@app.route('/admin/toggle/<int:item_id>', methods=['POST'])
+@login_required
+def toggle_item(item_id):
+    if not current_user.is_admin:
+        return redirect('/')
+
+    item = MenuItem.query.get(item_id)
+    item.available = not item.available
+    db.session.commit()
+    return redirect('/admin')
+
+
+@app.route('/admin/add', methods=['POST'])
+@login_required
+def add_item():
+    if not current_user.is_admin:
+        return redirect('/')
+
+    name = request.form['name']
+    price = request.form['price']
+
+    new_item = MenuItem(name=name, price=price, available=True)
+    db.session.add(new_item)
+    db.session.commit()
+    return redirect('/admin')
 
 
 @app.route('/signup', methods=['GET', 'POST'])

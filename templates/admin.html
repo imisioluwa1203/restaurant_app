@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - ACiD'S TREATS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    <p><a href="/">Back to Menu</a></p>
+
+    <h2>Current Menu Items</h2>
+    <table border="1" cellpadding="8">
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Available</th>
+            <th>Action</th>
+        </tr>
+        {% for item in menu_items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ "Yes" if item.available else "No" }}</td>
+            <td>
+                <form method="POST" action="/admin/toggle/{{ item.id }}">
+                    <button type="submit">Toggle Availability</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Add New Item</h2>
+    <form method="POST" action="/admin/add">
+        <input type="text" name="name" placeholder="Item name" required>
+        <input type="number" name="price" placeholder="Price" required>
+        <button type="submit">Add Item</button>
+    </form>
+</body>
+</html>
