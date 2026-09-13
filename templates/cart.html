@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Cart - ACiD'S TREATS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Your Cart</h1>
+
+    {% if ordered_food %}
+        <ul>
+            {% for item in ordered_food %}
+                <li>
+                    {{ item }}
+                    <form action="/remove_order" method="POST" style="display:inline;">
+                        <input type="hidden" name="item" value="{{ item }}">
+                        <button type="submit">Remove</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+         <p class="total">Total: {{ total }}</p>
+          <p><a href="/checkout">Proceed to Checkout</a></p>
+    {% else %}
+        <p>Your cart is empty.</p>
+    {% endif %}
+
+    <a href="/">Back to Menu</a>
+</body>
+</html>

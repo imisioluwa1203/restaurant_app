@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order History - ACiD'S TREATS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Your Order History</h1>
+    {% if orders %}
+        {% for order in orders %}
+            <div style="background:white; padding:10px 16px; margin-bottom:10px; border-radius:8px;">
+                <p><strong>{{ order.type }}</strong> — Total: {{ order.total }}</p>
+                <ul>
+                    {% for item in order[items] %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No past orders yet.</p>
+    {% endif %}
+    <p><a href="/">Back to Menu</a></p>
+</body>
+</html>
