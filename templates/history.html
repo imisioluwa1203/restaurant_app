@@ -2,21 +2,37 @@
 <html>
 <head>
     <title>Order History - ACiD'S TREATS</title>
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="navbar">
+        <div>
+            <h1>ACiD'S TREATS</h1>
+        </div>
+        <div>
+            <a href="/">Back to Menu</a>
+            <a href="/cart">View Cart</a>
+        </div>
+    </div>
+
     <h1>Your Order History</h1>
+
     {% if orders %}
-      {% for order in orders %}
-            <div style="background:white; padding:10px 16px; margin-bottom:10px; border-radius:8px;">
-                <p><strong>{{ order.order_type }}</strong> — Total: {{ order.total }}</p>
-                <p>{{ order.items }}</p>
-                <p style="font-size:12px; color:gray;">{{ order.created_at }}</p>
+        {% for order in orders %}
+            <div class="order-card">
+                <p class="order-header">
+                    <span class="order-type-badge">{{ order.order_type }}</span>
+                    Total: ₦{{ order.total }}
+                </p>
+                <p class="order-items">{{ order.items }}</p>
+                <p class="order-date">{{ order.created_at.strftime('%b %d, %Y — %I:%M %p') }}</p>
             </div>
-      {% endfor %}
+        {% endfor %}
     {% else %}
         <p>No past orders yet.</p>
     {% endif %}
-    <p><a href="/">Back to Menu</a></p>
 </body>
 </html>

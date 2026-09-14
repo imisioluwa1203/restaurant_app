@@ -2,22 +2,32 @@
 <html>
 <head>
     <title>Log In - ACiD'S TREATS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Log In</h1>
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
-    <form method="POST">
-        <p>
+    <div class="navbar">
+        <div>
+            <h1>ACiD'S TREATS</h1>
+        </div>
+        <div>
+            <a href="/">Back to Menu</a>
+        </div>
+    </div>
+
+    <div class="auth-box">
+        <h1>Log In</h1>
+
+        {% if error %}
+            <p class="error-msg">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" class="auth-form">
             <input type="text" name="username" placeholder="Username" required>
-        </p>
-        <p>
             <input type="password" name="password" placeholder="Password" required>
-        </p>
-        <button type="submit">Log In</button>
-    </form>
-    <p>Don't have an account? <a href="/signup">Sign up</a></p>
+            <button type="submit" class="btn">Log In</button>
+        </form>
+        <p class="auth-switch">Don't have an account? <a href="/signup">Sign up</a></p>
+    </div>
 </body>
 </html>

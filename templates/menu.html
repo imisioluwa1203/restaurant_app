@@ -2,6 +2,9 @@
 <html>
 <head>
     <title>ACiD'S TREATS</title>
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -21,6 +24,16 @@
                 {% endif %}
             </div>
         </div>
+        <div class="hero">
+            <div class="hero-text">
+                <p class="hero-tagline">WELCOME TO ACiD'S TREATS</p>
+                <h1 class="hero-heading">Real Food,<br>Real Fast</h1>
+                <p class="hero-sub">Freshly made Nigerian meals, delivered hot or ready for pickup — your choice.</p>
+                <a href="#menu" class="btn hero-btn">Order Now</a>
+            </div>
+        </div>
+
+        <h2 id="menu" class="section-title">Our Menu</h2>
     <ul class="menu-grid">
     {% for item in menu_items %}
 

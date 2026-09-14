@@ -2,14 +2,25 @@
 <html>
 <head>
     <title>Admin - ACiD'S TREATS</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="navbar">
+        <div>
+            <h1>ACiD'S TREATS</h1>
+        </div>
+        <div>
+            <a href="/">Back to Menu</a>
+        </div>
+    </div>
+
     <h1>Admin Panel</h1>
-    <p><a href="/">Back to Menu</a></p>
 
     <h2>Current Menu Items</h2>
-    <table border="1" cellpadding="8">
+    <table class="admin-table">
         <tr>
             <th>Name</th>
             <th>Price</th>
@@ -19,23 +30,27 @@
         {% for item in menu_items %}
         <tr>
             <td>{{ item.name }}</td>
-            <td>{{ item.price }}</td>
-            <td>{{ "Yes" if item.available else "No" }}</td>
+            <td>₦{{ item.price }}</td>
             <td>
+                <span class="avail-badge {{ 'yes' if item.available else 'no' }}">
+                    {{ "Yes" if item.available else "No" }}
+                </span>
+            </td>
+            <td class="admin-actions">
                 <form method="POST" action="/admin/toggle/{{ item.id }}">
-                    <button type="submit">Toggle Availability</button>
+                    <button type="submit" class="btn btn-small">Toggle</button>
                 </form>
-                  <a href="/admin/edit/{{ item.id }}">Edit</a>
+                <a href="/admin/edit/{{ item.id }}" class="btn btn-small btn-secondary">Edit</a>
             </td>
         </tr>
         {% endfor %}
     </table>
 
     <h2>Add New Item</h2>
-    <form method="POST" action="/admin/add">
+    <form method="POST" action="/admin/add" class="admin-add-form">
         <input type="text" name="name" placeholder="Item name" required>
         <input type="number" name="price" placeholder="Price" required>
-        <button type="submit">Add Item</button>
+        <button type="submit" class="btn">Add Item</button>
     </form>
 </body>
 </html>

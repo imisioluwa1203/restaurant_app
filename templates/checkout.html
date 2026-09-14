@@ -2,30 +2,46 @@
 <html>
 <head>
     <title>Checkout - ACiD'S TREATS</title>
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="navbar">
+        <div>
+            <h1>ACiD'S TREATS</h1>
+        </div>
+        <div>
+            <a href="/cart">Back to Cart</a>
+            <a href="/">Back to Menu</a>
+        </div>
+    </div>
+
     <h1>Your Receipt</h1>
 
     {% if ordered_food %}
-        <ul>
+        <ul class="cart-list">
             {% for item in ordered_food %}
-                <li>{{ item }}</li>
+                <li class="cart-item">{{ item }}</li>
             {% endfor %}
         </ul>
-        <p class="total">Total: {{ total }}</p>
-         <p style="font-size:0.9em; color:gray;">* Delivery adds a fee of {{ delivery_fee }}</p>
+        <p class="total">Total: ₦{{ total }}</p>
+        <p class="delivery-note">* Delivery adds a fee of ₦{{ delivery_fee }}</p>
+
         <form action="/place_order" method="POST">
-                <p>
-                    <label><input type="radio" name="order_type" value="Delivery" checked> Delivery</label>
-                    <label style="margin-left:15px;"><input type="radio" name="order_type" value="Pickup"> Pickup</label>
-                </p>
-                 <button type="submit">Place Order</button>
+            <div class="order-type-select">
+                <label class="radio-option">
+                    <input type="radio" name="order_type" value="Delivery" checked> Delivery
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="order_type" value="Pickup"> Pickup
+                </label>
+            </div>
+            <button type="submit" class="btn">Place Order</button>
         </form>
     {% else %}
         <p>Your cart is empty — nothing to check out.</p>
     {% endif %}
-
-    <p><a href="/cart">Back to Cart</a></p>
 </body>
 </html>

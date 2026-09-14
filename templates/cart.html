@@ -1,30 +1,42 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Your Cart - ACiD'S TREATS</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <h1>Your Cart</h1>
+    <head>
+        <title>Your Cart - ACiD'S TREATS</title>
 
-    {% if ordered_food %}
-        <ul>
-            {% for item in ordered_food %}
-                <li>
-                    {{ item }}
-                    <form action="/remove_order" method="POST" style="display:inline;">
-                        <input type="hidden" name="item" value="{{ item }}">
-                        <button type="submit">Remove</button>
-                    </form>
-                </li>
-            {% endfor %}
-        </ul>
-         <p class="total">Total: {{ total }}</p>
-          <p><a href="/checkout">Proceed to Checkout</a></p>
-    {% else %}
-        <p>Your cart is empty.</p>
-    {% endif %}
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <a href="/">Back to Menu</a>
-</body>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <div class="navbar">
+            <div>
+                <h1>ACiD'S TREATS</h1>
+            </div>
+            <div>
+                <a href="/">Back to Menu</a>
+                <a href="/history">Order History</a>
+            </div>
+        </div>
+
+        <h1>Your Cart</h1>
+
+        {% if ordered_food %}
+            <ul class="cart-list">
+                {% for item in ordered_food %}
+                    <li class="cart-item">
+                        <span>{{ item }}</span>
+                        <form action="/remove_order" method="POST">
+                            <input type="hidden" name="item" value="{{ item }}">
+                            <button type="submit" class="btn btn-remove">Remove</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+            <p class="total">Total: ₦{{ total }}</p>
+            <a href="/checkout" class="btn">Proceed to Checkout</a>
+        {% else %}
+            <p>Your cart is empty.</p>
+            <a href="/" class="btn">Back to Menu</a>
+        {% endif %}
+    </body>
 </html>
