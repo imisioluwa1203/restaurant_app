@@ -5,34 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <div class="navbar">
-        <div>
-            <h1>ACiD'S TREATS</h1>
+
+<body class="auth-page">
+    <div class="auth-hero">
+        <div class="auth-card">
+            <h1 class="auth-logo">ACiD'S <span>TREATS</span></h1>
+            <p class="auth-tagline">Good Food, Happy Mood</p>
+
+            <h2>Create an Account</h2>
+            <p class="auth-desc">Sign up to start ordering your favorite meals.</p>
+
+            {% if error %}
+                <p class="error-msg">
+                    {{ error }}
+                    {% if "already taken" in error %}
+                        — <a href="/login">Log in instead</a>
+                    {% endif %}
+                </p>
+            {% endif %}
+
+            <form method="POST" class="auth-form-dark">
+                <label>Full Name</label>
+                <input type="text" name="full_name" placeholder="Enter your full name" required>
+
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Choose a username" required>
+
+                <label>Email</label>
+                <input type="email" name="email" placeholder="Enter your email" required>
+
+                <label>Phone Number</label>
+                <input type="tel" name="phone" placeholder="Enter your phone number" required>
+
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Create a password" required>
+
+                <button type="submit" class="btn auth-submit">Sign Up</button>
+            </form>
+              <div class="auth-divider"><span>or continue with</span></div>
+
+            <div class="social-auth">
+                <button type="button" class="social-btn" disabled>
+                    <img src="https://www.google.com/favicon.ico" alt="Google" class="social-icon">
+                    Google
+                </button>
+                <button type="button" class="social-btn" disabled>
+                    <span class="social-icon">📘</span>
+                    Facebook
+                </button>
+                <button type="button" class="social-btn" disabled>
+                    <span class="social-icon"></span>
+                    Apple
+                </button>
+            </div>
+            <p class="auth-switch-dark">Already have an account? <a href="/login">Log in</a></p>
         </div>
-        <div>
-            <a href="/">Back to Menu</a>
-        </div>
-    </div>
-
-    <div class="auth-box">
-        <h1>Create an Account</h1>
-
-        {% if error %}
-            <p class="error-msg">
-                {{ error }}
-                {% if "already taken" in error %}
-                    — <a href="/login">Log in instead</a>
-                {% endif %}
-            </p>
-        {% endif %}
-
-        <form method="POST" class="auth-form">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" class="btn">Sign Up</button>
-        </form>
-        <p class="auth-switch"><a href="/login">Already have an account? Log in</a></p>
     </div>
 </body>
 </html>

@@ -176,17 +176,33 @@ def add_item():
     return redirect('/admin')
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        full_name = request.form['full_name']
+        email = request.form['email']
+        phone = request.form['phone']
 
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             return render_template('signup.html', error="Username already taken")
 
-        new_user = User(username=username)
+        existing_email = User.query.filter_by(email=email).first()
+        if existing_email:
+            return render_template('signup.html', error="Email already registered")
+
+        new_user = User(username=username, full_name=full_name, email=email, phone=phone)
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About - ACiD'S TREATS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-left">
+            <h1>ACiD'S TREATS</h1>
+        </div>
+        <div class="nav-center">
+            <a href="/">Home</a>
+            <a href="/#menu">Menu</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+        </div>
+        <div class="nav-right">
+            <span id="cart-total">Cart: ₦0</span>
+            <a href="/cart">View Cart</a>
+            <a href="/history">Order History</a>
+            {% if current_user.is_authenticated %}
+                <a href="/admin">Admin</a>
+                <span style="margin-left:16px; white-space: nowrap;">Welcome, {{ current_user.username }}</span>
+                <a href="/logout">Log out</a>
+            {% else %}
+                <a href="/login">Log In</a>
+                <a href="/signup">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="auth-box" style="max-width: 600px;">
+        <h1>About ACiD'S TREATS</h1>
+        <p>We're passionate about serving authentic Nigerian meals made fresh, every single day. From jollof rice to eba, our recipes bring home-style flavor straight to your door.</p>
+        <p>Whether you're craving a quick lunch or ordering for the whole family, ACiD'S TREATS delivers real food, fast.</p>
+    </div>
+</body>
+</html>
