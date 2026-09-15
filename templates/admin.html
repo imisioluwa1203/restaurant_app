@@ -69,11 +69,50 @@
     </table>
 
     <h2>Add New Item</h2>
-    <form method="POST" action="/admin/add" class="admin-add-form">
-        <input type="text" name="name" placeholder="Item name" required>
-        <input type="number" name="price" placeholder="Price" required>
-        <button type="submit" class="btn">Add Item</button>
-    </form>
+<form method="POST" action="/admin/add" class="admin-add-form">
+    <input type="text" name="name" placeholder="Item name" required>
+    <input type="number" name="price" placeholder="Price" required>
+    <select name="category" required>
+        <option value="" disabled selected>Select category</option>
+        <option value="Swallows">Swallows</option>
+        <option value="Rice">Rice</option>
+        <option value="Yam & Egg Sauce">Yam & Egg Sauce</option>
+        <option value="Noodles">Noodles</option>
+        <option value="Nigerian Dishes">Nigerian Dishes (Other)</option>
+        <option value="International Dishes">International Dishes</option>
+        <option value="Snacks">Snacks</option>
+        <option value="Drinks">Drinks</option>
+    </select>
+    <button type="submit" class="btn">Add Item</button>
+</form>
+
+    <h2>Manage Orders</h2>
+    <table class="admin-table">
+      <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Status</th>
+        <th>Update</th>
+      </tr>
+      {% for order in orders %}
+      <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.user.username }}</td>
+        <td>{{ order.status }}</td>
+        <td>
+          <form action="{{ url_for('update_order_status', order_id=order.id) }}" method="POST">
+            <select name="status">
+              <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+              <option value="Preparing" {% if order.status == 'Preparing' %}selected{% endif %}>Preparing</option>
+              <option value="Out for Delivery" {% if order.status == 'Out for Delivery' %}selected{% endif %}>Out for Delivery</option>
+              <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+            </select>
+            <button type="submit" class="btn">Update</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
 <script>
 function toggleUserMenu() {
     document.querySelector('.user-menu').classList.toggle('open');

@@ -37,6 +37,16 @@
         <p><strong>Phone:</strong> 0800 000 0000</p>
         <p><strong>Email:</strong> hello@acidstreats.com</p>
         <p><strong>Hours:</strong> Mon–Sun, 9am – 9pm</p>
+        {% if success %}
+          <p class="success-msg">Thanks for reaching out — we'll get back to you soon!</p>
+        {% endif %}
+
+        <form method="POST" class="auth-form" style="margin-top: 24px;">
+            <input type="text" name="name" placeholder="Your name" required>
+            <input type="email" name="email" placeholder="Your email" required>
+            <textarea name="message" placeholder="Your message" rows="5" required></textarea>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
     </div>
 </body>
 </html>

@@ -24,10 +24,26 @@
 
                 <label>Password</label>
                 <input type="password" name="password" placeholder="Enter your password" required>
+                <p class="forgot-password-link"><a href="/forgot-password">Forgot Password?</a></p>
 
                 <button type="submit" class="btn auth-submit">Log In</button>
             </form>
+                <div class="auth-divider"><span>or continue with</span></div>
 
+                <div class="social-auth">
+                    <button type="button" class="social-btn" disabled>
+                        <img src="https://www.google.com/favicon.ico" alt="Google" class="social-icon">
+                        Google
+                    </button>
+                    <button type="button" class="social-btn" disabled>
+                        <span class="social-icon">📘</span>
+                        Facebook
+                    </button>
+                    <button type="button" class="social-btn" disabled>
+                        <span class="social-icon"></span>
+                        Apple
+                    </button>
+                </div>
             <p class="auth-switch-dark">Don't have an account? <a href="/signup">Sign Up</a></p>
         </div>
     </div>

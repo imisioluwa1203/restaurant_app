@@ -80,6 +80,24 @@
                 </div>
             </div>
         </div>
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Popular Meals</h2>
+                <p class="section-sub">Our most loved dishes, made fresh daily.</p>
+            </div>
+            <a href="#menu" class="view-full-link">View Full Menu →</a>
+        </div>
+        <ul class="menu-grid popular-grid">
+            {% for item in popular_items %}
+                <li class="food-card" data-price="{{ item.price }}">
+                    {% if item.image_url %}
+                        <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                    {% endif %}
+                    <h3>{{ item.name }}</h3>
+                    <p class="price">₦{{ item.price }}</p>
+                </li>
+            {% endfor %}
+        </ul>
 
         <h2 id="menu" class="section-title">Our Menu</h2>
     <ul class="menu-grid">

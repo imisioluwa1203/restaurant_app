@@ -45,13 +45,13 @@
     {% if ordered_food %}
         <ul class="cart-list">
             {% for item in ordered_food %}
-                <li class="cart-item">{{ item }}</li>
+                <li class="cart-item">{{ item.quantity }} {{ item.food }}{% if item.notes %} ({{ item.notes }}){% endif %}</li>
             {% endfor %}
         </ul>
         <p class="total">Total: ₦{{ total }}</p>
         <p class="delivery-note">* Delivery adds a fee of ₦{{ delivery_fee }}</p>
 
-        <form action="/place_order" method="POST">
+        <form action="/initialize_payment" method="POST">
             <div class="order-type-select">
                 <label class="radio-option">
                     <input type="radio" name="order_type" value="Delivery" checked> Delivery

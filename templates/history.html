@@ -50,6 +50,7 @@
                     Total: ₦{{ order.total }}
                 </p>
                 <p class="order-items">{{ order.items }}</p>
+                 <p>Status: <span class="status-badge status-{{ order.status | lower | replace(' ', '-') }}">{{ order.status }}</span></p>
                 <p class="order-date">{{ order.created_at.strftime('%b %d, %Y — %I:%M %p') }}</p>
             </div>
         {% endfor %}
