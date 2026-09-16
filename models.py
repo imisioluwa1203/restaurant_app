@@ -25,6 +25,7 @@ class MenuItem(db.Model):
     image_url = db.Column(db.String(300))
     order_count = db.Column(db.Integer, default=0)
     category = db.Column(db.String(50), nullable=False, default='Mains')
+    description = db.Column(db.String(500))
 
 
 
@@ -60,3 +61,10 @@ class CartItem(db.Model):
     notes = db.Column(db.String(200), nullable=True)
 
     user = db.relationship('User', backref='cart_items')
+
+class PromoCode(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(30), unique=True, nullable=False)
+    discount_type = db.Column(db.String(10), nullable=False)  # 'flat' or 'percent'
+    discount_value = db.Column(db.Integer, nullable=False)
+    active = db.Column(db.Boolean, default=True)

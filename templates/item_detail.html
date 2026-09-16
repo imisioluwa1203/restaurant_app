@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    <div class="nav-left">
+        <h1>ACiD'S TREATS</h1>
+    </div>
+    <div class="nav-center">
+        <a href="/">Home</a>
+        <a href="/#menu">Menu</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+    </div>
+    <div class="nav-right">
+        <span id="cart-total">Cart: ₦0</span>
+        <a href="/cart">View Cart</a>
+    </div>
+</div>
+
+<div class="item-detail">
+    {% if item.image_url %}
+        <img src="{{ item.image_url }}" alt="{{ item.name }}" class="item-detail-img">
+    {% endif %}
+
+    <h2>{{ item.name }}</h2>
+    <p class="price">₦{{ item.price }}</p>
+    <p class="category">Category: {{ item.category }}</p>
+
+    {% if not item.available %}
+        <p class="unavailable">Currently unavailable</p>
+    {% else %}
+        <form action="/add_order" method="POST">
+            <input type="hidden" name="food" value="{{ item.name }}">
+            <div class="qty-stepper">
+                <button type="button" class="qty-btn minus">-</button>
+                <input type="number" name="quantity" value="1" min="1">
+                <button type="button" class="qty-btn plus">+</button>
+            </div>
+            <input type="text" name="notes" placeholder="e.g. no onions">
+            <button type="submit" class="btn">Add to Cart</button>
+        </form>
+    {% endif %}
+
+    <a href="/#menu" class="btn-secondary">Back to Menu</a>
+</div>
+
+</body>
+</html>

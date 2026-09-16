@@ -31,7 +31,7 @@ PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-from models import db, Order, MenuItem, User, ContactMessage, CartItem
+from models import db, Order, MenuItem, User, ContactMessage, CartItem, PromoCode
 db.init_app(app)
 
 login_manager = LoginManager()
@@ -63,10 +63,13 @@ with app.app_context():
 
 @app.route('/')
 def home():
-    menu_items = MenuItem.query.filter_by(available=True).all()
+    selected_category = request.args.get('category')
+    if selected_category:
+        menu_items = MenuItem.query.filter_by(available=True, category=selected_category).all()
+    else:
+        menu_items = MenuItem.query.filter_by(available=True).all()
     popular_items = MenuItem.query.filter_by(available=True).order_by(MenuItem.order_count.desc()).limit(3).all()
-    return render_template('menu.html', menu_items=menu_items, popular_items=popular_items)
-
+    return render_template('menu.html', menu_items=menu_items, popular_items=popular_items, selected_category=selected_category)
 
 @app.route('/add_order', methods=['POST'])
 @login_required
@@ -139,6 +142,18 @@ def initialize_payment():
     )
     if order_type == 'Delivery':
         total += DELIVERY_FEE
+
+    promo_code_input = request.form.get('promo_code', '').strip().upper()
+    discount_applied = 0
+
+    if promo_code_input:
+        promo = PromoCode.query.filter_by(code=promo_code_input, active=True).first()
+        if promo:
+            if promo.discount_type == 'percent':
+                discount_applied = total * promo.discount_value / 100
+            else:
+                discount_applied = promo.discount_value
+            total = max(total - discount_applied, 0)
 
     amount_kobo = int(total * 100)  # Paystack uses kobo, not naira
 
@@ -253,16 +268,42 @@ def history():
     orders = Order.query.order_by(Order.created_at.desc()).all()
     return render_template('history.html', orders=orders)
 
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        full_name = request.form.get('full_name', '').strip()
+        email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip()
+
+        existing = User.query.filter(User.email == email, User.id != current_user.id).first()
+        if existing:
+            return render_template('profile.html', error="That email is already in use by another account.")
+
+        current_user.full_name = full_name
+        current_user.email = email
+        current_user.phone = phone
+        db.session.commit()
+
+        return render_template('profile.html', success="Profile updated successfully.")
+
+    return render_template('profile.html')
 
 @app.route('/admin')
 @login_required
 def admin():
     if not current_user.is_admin:
-        return redirect(url_for('home'))
+        return redirect('/')
 
     menu_items = MenuItem.query.all()
     orders = Order.query.order_by(Order.id.desc()).all()
-    return render_template('admin.html', menu_items=menu_items, orders=orders)
+
+    total_revenue = db.session.query(db.func.sum(Order.total)).scalar() or 0
+    total_orders = Order.query.count()
+    top_items = MenuItem.query.order_by(MenuItem.order_count.desc()).limit(5).all()
+
+    return render_template('admin.html', menu_items=menu_items, orders=orders,
+                            total_revenue=total_revenue, total_orders=total_orders, top_items=top_items)
 
 
 @app.route('/admin/edit/<int:item_id>', methods=['GET', 'POST'])
@@ -281,6 +322,11 @@ def edit_item(item_id):
 
     return render_template('edit_item.html', item=item)
 
+@app.route('/item/<int:item_id>')
+def item_detail(item_id):
+    item = MenuItem.query.get_or_404(item_id)
+    return render_template('item_detail.html', item=item)
+
 @app.route('/admin/toggle/<int:item_id>', methods=['POST'])
 @login_required
 def toggle_item(item_id):
@@ -293,17 +339,28 @@ def toggle_item(item_id):
     return redirect('/admin')
 
 
+
+from werkzeug.utils import secure_filename
+
 @app.route('/admin/add', methods=['POST'])
 @login_required
-def add_item():
+def admin_add():
     if not current_user.is_admin:
         return redirect('/')
 
     name = request.form['name']
-    price = request.form['price']
+    price = int(request.form['price'])
     category = request.form['category']
 
-    new_item = MenuItem(name=name, price=price,category=category, available=True)
+    image_url = None
+    file = request.files.get('image')
+    if file and file.filename:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join('static', 'images', filename)
+        file.save(filepath)
+        image_url = f'/static/images/{filename}'
+
+    new_item = MenuItem(name=name, price=price, category=category, image_url=image_url)
     db.session.add(new_item)
     db.session.commit()
     return redirect('/admin')

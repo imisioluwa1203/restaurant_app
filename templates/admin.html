@@ -40,7 +40,23 @@
     </div>
 </div>
     <h1>Admin Panel</h1>
+ <div class="analytics-dashboard">
+    <div class="stat-card">
+        <h3>₦{{ total_revenue }}</h3>
+        <p>Total Revenue</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ total_orders }}</h3>
+        <p>Total Orders</p>
+    </div>
+</div>
 
+<h2>Top Selling Items</h2>
+<ul class="top-items-list">
+    {% for item in top_items %}
+        <li>{{ item.name }} — {{ item.order_count or 0 }} sold</li>
+    {% endfor %}
+</ul>
     <h2>Current Menu Items</h2>
     <table class="admin-table">
         <tr>
@@ -69,9 +85,10 @@
     </table>
 
     <h2>Add New Item</h2>
-<form method="POST" action="/admin/add" class="admin-add-form">
+<form method="POST" action="/admin/add" class="admin-add-form" enctype="multipart/form-data">
     <input type="text" name="name" placeholder="Item name" required>
     <input type="number" name="price" placeholder="Price" required>
+    <input type="file" name="image" accept="image/">
     <select name="category" required>
         <option value="" disabled selected>Select category</option>
         <option value="Swallows">Swallows</option>

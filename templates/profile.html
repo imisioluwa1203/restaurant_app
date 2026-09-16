@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    <div class="nav-left">
+        <h1>ACiD'S TREATS</h1>
+    </div>
+    <div class="nav-center">
+        <a href="/">Home</a>
+        <a href="/#menu">Menu</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+    </div>
+    <div class="nav-right">
+        <span id="cart-total">Cart: ₦0</span>
+        <a href="/cart">View Cart</a>
+        <div class="user-menu">
+            <button class="user-menu-btn" onclick="toggleUserMenu()">
+                Welcome, {{ current_user.username }}
+                <span class="chevron">▾</span>
+            </button>
+            <div class="user-dropdown" id="userDropdown">
+                <a href="/profile">My Profile</a>
+                <a href="/history">Order History</a>
+                {% if current_user.is_admin %}
+                <a href="/admin">Admin</a>
+                {% endif %}
+                <a href="/logout">Log out</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="auth-hero">
+    <div class="auth-card">
+        <h2>My Profile</h2>
+        <p class="auth-desc">View and update your account details</p>
+
+        {% if error %}
+            <p class="error-msg">{{ error }}</p>
+        {% endif %}
+        {% if success %}
+            <p class="success-msg">{{ success }}</p>
+        {% endif %}
+
+        <form method="POST" class="auth-form-dark">
+            <label>Username</label>
+            <input type="text" value="{{ current_user.username }}" disabled>
+
+            <label>Full Name</label>
+            <input type="text" name="full_name" value="{{ current_user.full_name }}" required>
+
+            <label>Email</label>
+            <input type="email" name="email" value="{{ current_user.email }}" required>
+
+            <label>Phone</label>
+            <input type="text" name="phone" value="{{ current_user.phone }}" required>
+
+            <button type="submit" class="btn">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function toggleUserMenu() {
+    document.querySelector('.user-menu').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+    const menu = document.querySelector('.user-menu');
+    if (menu && !menu.contains(e.target)) {
+        menu.classList.remove('open');
+    }
+});
+</script>
+
+</body>
+</html>

@@ -29,6 +29,8 @@
                             <span class="chevron">▾</span>
                         </button>
                         <div class="user-dropdown" id="userDropdown">
+                            <a href="/profile">My Profile</a>
+                            <a href="/history">Order History</a>
                             <a href="/history">Order History</a>
                             <a href="/admin">Admin</a>
                             <a href="/logout">Log out</a>
@@ -98,7 +100,18 @@
                 </li>
             {% endfor %}
         </ul>
-
+        <input type="text" id="menu-search" placeholder="Search menu..." class="menu-search">
+            <div class="category-filters">
+                <a href="/#menu" class="{% if not selected_category %}active{% endif %}">All</a>
+                <a href="/?category=Swallows#menu" class="{% if selected_category == 'Swallows' %}active{% endif %}">Swallows</a>
+                <a href="/?category=Rice#menu" class="{% if selected_category == 'Rice' %}active{% endif %}">Rice</a>
+                <a href="/?category=Yam & Egg Sauce#menu" class="{% if selected_category == 'Yam & Egg Sauce' %}active{% endif %}">Yam & Egg Sauce</a>
+                <a href="/?category=Noodles#menu" class="{% if selected_category == 'Noodles' %}active{% endif %}">Noodles</a>
+                <a href="/?category=Nigerian Dishes#menu" class="{% if selected_category == 'Nigerian Dishes' %}active{% endif %}">Nigerian Dishes</a>
+                <a href="/?category=International Dishes#menu" class="{% if selected_category == 'International Dishes' %}active{% endif %}">International</a>
+                <a href="/?category=Snacks#menu" class="{% if selected_category == 'Snacks' %}active{% endif %}">Snacks</a>
+                <a href="/?category=Drinks#menu" class="{% if selected_category == 'Drinks' %}active{% endif %}">Drinks</a>
+            </div>
         <h2 id="menu" class="section-title">Our Menu</h2>
     <ul class="menu-grid">
     {% for item in menu_items %}
@@ -107,7 +120,7 @@
              {% if item.image_url %}
                 <img src="{{ item.image_url }}" alt="{{ item.name }}">
             {% endif %}
-            <h3>{{ item.name }}</h3>
+            <h3><a href="{{ url_for('item_detail', item_id=item.id) }}">{{ item.name }}</a></h3>
             <p class="price">₦{{ item.price }}</p>
             <form action="/add_order" method="POST">
                 <input type="hidden" name="food" value="{{ item.name }}">
@@ -178,12 +191,23 @@ document.querySelectorAll('.food-card form').forEach(form => {
 function toggleUserMenu() {
   document.querySelector('.user-menu').classList.toggle('open');
 }
+function toggleUserMenu() {
+    document.querySelector('.user-menu').classList.toggle('open');
+}
+
+document.getElementById('menu-search').addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+    document.querySelectorAll('.food-card').forEach(card => {
+        const name = card.querySelector('h3').textContent.toLowerCase();
+        card.style.display = name.includes(query) ? '' : 'none';
+    });
+});
 
 document.addEventListener('click', function(e) {
-  const menu = document.querySelector('.user-menu');
-  if (menu && !menu.contains(e.target)) {
-    menu.classList.remove('open');
- }
+    const menu = document.querySelector('.user-menu');
+    if (menu && !menu.contains(e.target)) {
+        menu.classList.remove('open');
+    }
 });
 </script>
 </body>
