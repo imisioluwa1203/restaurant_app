@@ -880,6 +880,8 @@ main, .menu-grid {
         padding: 0;
         min-height: auto;
         background: none;
+        display: flex;
+        justify-content: center;
     }
 
     .auth-hero::before {

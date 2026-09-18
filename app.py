@@ -4,9 +4,13 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from dotenv import load_dotenv
 from flask_mail import Mail, Message
 import secrets
+import random
+from datetime import datetime, timedelta
+
 from datetime import datetime, timedelta
 import os
 import requests
+
 
 load_dotenv()
 
@@ -389,29 +393,112 @@ def contact():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
         full_name = request.form['full_name']
+        username = request.form['username']
         email = request.form['email']
         phone = request.form['phone']
+        password = request.form['password']
 
-        existing_user = User.query.filter_by(username=username).first()
+        existing_user = User.query.filter(
+            (User.username == username) | (User.email == email)
+        ).first()
         if existing_user:
-            return render_template('signup.html', error="Username already taken")
+            error = "Username or email already taken"
+            if existing_user.username == username:
+                error = f"Username already taken - {error}"
+            return render_template('signup.html', error=error)
 
-        existing_email = User.query.filter_by(email=email).first()
-        if existing_email:
-            return render_template('signup.html', error="Email already registered")
 
-        new_user = User(username=username, full_name=full_name, email=email, phone=phone)
+        # ... inside signup(), replacing the old token/new_user/email section:
+
+        otp = str(random.randint(100000, 999999))  # 6-digit code
+
+        new_user = User(
+            full_name=full_name,
+            username=username,
+            email=email,
+            phone=phone,
+            is_verified=False,
+            otp_code=otp,
+            otp_expiry=datetime.utcnow() + timedelta(minutes=10),
+            otp_last_sent=datetime.utcnow()
+        )
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
 
-        login_user(new_user)
-        return redirect('/')
+        msg = Message(subject="Your ACiD'S TREATS verification code",
+                      sender=app.config['MAIL_USERNAME'],
+                      recipients=[email])
+        msg.body = f"Welcome to ACiD'S TREATS! Your verification code is: {otp}\n\nThis code expires in 10 minutes."
+        mail.send(msg)
 
+        session['pending_email'] = email  # so verify_otp knows who's verifying
+        return redirect(url_for('verify_otp'))
     return render_template('signup.html')
+
+
+@app.route('/verify-otp', methods=['GET', 'POST'])
+def verify_otp():
+    email = session.get('pending_email')
+    if not email:
+        return redirect(url_for('signup'))
+
+    if request.method == 'POST':
+        entered_otp = request.form['otp'].strip()
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            return redirect(url_for('signup'))
+
+        if user.is_verified:
+            return redirect(url_for('login'))
+
+        if user.otp_expiry < datetime.utcnow():
+            return render_template('verify_otp.html', error="Code expired. Please request a new one.")
+
+        if user.otp_code == entered_otp:
+            user.is_verified = True
+            user.otp_code = None
+            user.otp_expiry = None
+            db.session.commit()
+            session.pop('pending_email', None)
+            return redirect(url_for('login', verified='1'))
+        else:
+            return render_template('verify_otp.html', error="Incorrect code. Please try again.")
+
+    return render_template('verify_otp.html')
+
+@app.route('/resend-otp')
+def resend_otp():
+    email = session.get('pending_email')
+    if not email:
+        return redirect(url_for('signup'))
+
+    user = User.query.filter_by(email=email).first()
+    if not user or user.is_verified:
+        return redirect(url_for('verify_otp'))
+
+    cooldown_seconds = 60
+    if user.otp_last_sent:
+        elapsed = (datetime.utcnow() - user.otp_last_sent).total_seconds()
+        if elapsed < cooldown_seconds:
+            wait = int(cooldown_seconds - elapsed)
+            return render_template('verify_otp.html', error=f"Please wait {wait} seconds before requesting a new code.")
+
+    otp = str(random.randint(100000, 999999))
+    user.otp_code = otp
+    user.otp_expiry = datetime.utcnow() + timedelta(minutes=10)
+    user.otp_last_sent = datetime.utcnow()
+    db.session.commit()
+
+    msg = Message(subject="Your new ACiD'S TREATS verification code",
+                  sender=app.config['MAIL_USERNAME'],
+                  recipients=[email])
+    msg.body = f"Your new verification code is: {otp}\n\nThis code expires in 10 minutes."
+    mail.send(msg)
+
+    return redirect(url_for('verify_otp'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -422,6 +509,11 @@ def login():
         user = User.query.filter_by(username=username).first()
 
         if user and user.check_password(password):
+            if not user.is_verified:
+                  return render_template('login.html',
+                                   error="Please verify your email before logging in. Check your inbox for the verification link.")
+
+
             login_user(user)
             return redirect('/')
         else:

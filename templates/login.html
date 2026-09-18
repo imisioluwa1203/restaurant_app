@@ -8,6 +8,12 @@
 <body class="auth-page">
     <div class="auth-hero">
         <div class="auth-card">
+            {% if request.args.get('verified') %}
+                    <p class="success-msg">Email verified! You can now log in.</p>
+            {% endif %}
+            {% if error %}
+                    <p class="error-msg">{{ error }}</p>
+            {% endif %}
             <h1 class="auth-logo">ACiD'S <span>TREATS</span></h1>
             <p class="auth-tagline">Good Food, Happy Mood</p>
 
