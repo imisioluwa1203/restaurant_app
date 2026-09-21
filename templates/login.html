@@ -25,6 +25,8 @@
             {% endif %}
 
             <form method="POST" class="auth-form-dark">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
                 <label>Username</label>
                 <input type="text" name="username" placeholder="Enter your username" required>
 

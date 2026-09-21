@@ -18,10 +18,18 @@
                 <p class="error-msg">{{ error }}</p>
             {% endif %}
 
-            <form method="POST"  action="{{ url_for('verify_otp')}}" class="auth-form-dark">
+            <form method="POST" action="{{ url_for('verify_otp') }}" class="auth-form-dark" id="otp-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <label>Verification Code</label>
-                <input type="text" name="otp" maxlength="6" placeholder="Enter 6-digit code" required
-                       style="letter-spacing: 6px; text-align: center; font-size: 20px;">
+                <div class="otp-boxes">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric" autocomplete="one-time-code">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+                    <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+                </div>
+                <input type="hidden" name="otp" id="otp-hidden">
 
                 <button type="submit" class="btn auth-submit">Verify</button>
             </form>
@@ -29,5 +37,52 @@
             <p class="auth-switch">Didn't get it? <a href="/resend-otp">Resend code</a></p>
         </div>
     </div>
+
+    <script>
+        const boxes = document.querySelectorAll('.otp-box');
+        const hiddenInput = document.getElementById('otp-hidden');
+        const form = document.getElementById('otp-form');
+
+        boxes.forEach((box, index) => {
+            box.addEventListener('input', () => {
+                box.value = box.value.replace(/[^0-9]/g, '');
+                if (box.value && index < boxes.length - 1) {
+                    boxes[index + 1].focus();
+                }
+                updateHiddenInput();
+            });
+
+            box.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !box.value && index > 0) {
+                    boxes[index - 1].focus();
+                }
+            });
+
+            box.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+                pasted.split('').forEach((char, i) => {
+                    if (boxes[i]) boxes[i].value = char;
+                });
+                const nextEmpty = Array.from(boxes).findIndex(b => !b.value);
+                boxes[nextEmpty === -1 ? boxes.length - 1 : nextEmpty].focus();
+                updateHiddenInput();
+            });
+        });
+
+        function updateHiddenInput() {
+            hiddenInput.value = Array.from(boxes).map(b => b.value).join('');
+        }
+
+        form.addEventListener('submit', (e) => {
+            updateHiddenInput();
+            if (hiddenInput.value.length !== 6) {
+                e.preventDefault();
+                alert('Please enter all 6 digits.');
+            }
+        });
+
+        boxes[0].focus();
+    </script>
 </body>
 </html>

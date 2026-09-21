@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_wtf.csrf import  CSRFProtect
 from dotenv import load_dotenv
 from flask_mail import Mail, Message
 import secrets
@@ -14,8 +15,29 @@ import requests
 
 load_dotenv()
 
+BREVO_API_KEY = os.environ.get('BREVO_API_KEY')
+MAIL_SENDER = os.environ.get('MAIL_SENDER')
+
+def send_email(to_email, subject, body_text):
+    url = "https://api.brevo.com/v3/smtp/email"
+    headers = {
+        "accept": "application/json",
+        "api-key": BREVO_API_KEY,
+        "content-type": "application/json"
+    }
+    payload = {
+        "sender": {"email": MAIL_SENDER, "name": "ACiD'S TREATS"},
+        "to": [{"email": to_email}],
+        "subject": subject,
+        "textContent": body_text
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    return response
+
+
 app = Flask(__name__)
 app.secret_key = 'acid-treats-secret-key'
+csrf = CSRFProtect(app)
 
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
 app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT'))
@@ -427,11 +449,8 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
 
-        msg = Message(subject="Your ACiD'S TREATS verification code",
-                      sender=app.config['MAIL_USERNAME'],
-                      recipients=[email])
-        msg.body = f"Welcome to ACiD'S TREATS! Your verification code is: {otp}\n\nThis code expires in 10 minutes."
-        mail.send(msg)
+        send_email(email, "Your ACiD'S TREATS verification code",
+                   f"Welcome to ACiD'S TREATS! Your verification code is: {otp}\n\nThis code expires in 10 minutes.")
 
         session['pending_email'] = email  # so verify_otp knows who's verifying
         return redirect(url_for('verify_otp'))
@@ -492,11 +511,8 @@ def resend_otp():
     user.otp_last_sent = datetime.utcnow()
     db.session.commit()
 
-    msg = Message(subject="Your new ACiD'S TREATS verification code",
-                  sender=app.config['MAIL_USERNAME'],
-                  recipients=[email])
-    msg.body = f"Your new verification code is: {otp}\n\nThis code expires in 10 minutes."
-    mail.send(msg)
+    send_email(email, "Your ACiD'S TREATS verification code",
+               f"Welcome to ACiD'S TREATS! Your verification code is: {otp}\n\nThis code expires in 10 minutes.")
 
     return redirect(url_for('verify_otp'))
 
@@ -539,11 +555,8 @@ def forgot_password():
 
         reset_link = url_for('reset_password', token=token, _external=True)
 
-        msg = Message('Reset Your Password - ACiD\'S TREATS',
-                       sender=os.environ.get('MAIL_USERNAME'),
-                       recipients=[email])
-        msg.body = f"Hi {user.full_name},\n\nClick the link below to reset your password. This link expires in 1 hour.\n\n{reset_link}\n\nIf you didn't request this, ignore this email."
-        mail.send(msg)
+        send_email(email, "Reset your ACiD'S Treats password",
+                   f"Click the link below to reset your password:\n\n {reset_link}\n\nThis link expires in 1 hour.")
 
         return render_template('forgot_password.html', success=True)
 

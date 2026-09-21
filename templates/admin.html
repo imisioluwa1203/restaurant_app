@@ -1,46 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin - ACiD'S TREATS</title>
+{% extends "base.html" %}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Admin - ACiD'S TREATS{% endblock %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-<div class="navbar">
-    <div class="nav-left">
-        <h1>ACiD'S TREATS</h1>
-    </div>
-    <div class="nav-center">
-        <a href="/">Home</a>
-        <a href="/#menu">Menu</a>
-        <a href="/about">About</a>
-        <a href="/contact">Contact</a>
-    </div>
-    <div class="nav-right">
-        <span id="cart-total">Cart: ₦0</span>
-        <a href="/cart">View Cart</a>
-        {% if current_user.is_authenticated %}
-            <div class="user-menu">
-                <button class="user-menu-btn" onclick="toggleUserMenu()">
-                    Welcome, {{ current_user.username }}
-                    <span class="chevron">▾</span>
-                </button>
-                <div class="user-dropdown" id="userDropdown">
-                    <a href="/history">Order History</a>
-                    <a href="/admin">Admin</a>
-                    <a href="/logout">Log out</a>
-                </div>
-            </div>
-        {% else %}
-            <a href="/login">Log In</a>
-            <a href="/signup">Sign Up</a>
-        {% endif %}
-    </div>
-</div>
-    <h1>Admin Panel</h1>
- <div class="analytics-dashboard">
+{% block content %}
+
+<h1>Admin Panel</h1>
+<div class="analytics-dashboard">
     <div class="stat-card">
         <h3>₦{{ total_revenue }}</h3>
         <p>Total Revenue</p>
@@ -57,38 +22,41 @@
         <li>{{ item.name }} — {{ item.order_count or 0 }} sold</li>
     {% endfor %}
 </ul>
-    <h2>Current Menu Items</h2>
-    <table class="admin-table">
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Available</th>
-            <th>Action</th>
-        </tr>
-        {% for item in menu_items %}
-        <tr>
-            <td>{{ item.name }}</td>
-            <td>₦{{ item.price }}</td>
-            <td>
-                <span class="avail-badge {{ 'yes' if item.available else 'no' }}">
-                    {{ "Yes" if item.available else "No" }}
-                </span>
-            </td>
-            <td class="admin-actions">
-                <form method="POST" action="/admin/toggle/{{ item.id }}">
-                    <button type="submit" class="btn btn-small">Toggle</button>
-                </form>
-                <a href="/admin/edit/{{ item.id }}" class="btn btn-small btn-secondary">Edit</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
 
-    <h2>Add New Item</h2>
+<h2>Current Menu Items</h2>
+<table class="admin-table">
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Available</th>
+        <th>Action</th>
+    </tr>
+    {% for item in menu_items %}
+    <tr>
+        <td>{{ item.name }}</td>
+        <td>₦{{ item.price }}</td>
+        <td>
+            <span class="avail-badge {{ 'yes' if item.available else 'no' }}">
+                {{ "Yes" if item.available else "No" }}
+            </span>
+        </td>
+        <td class="admin-actions">
+            <form method="POST" action="/admin/toggle/{{ item.id }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-small">Toggle</button>
+            </form>
+            <a href="/admin/edit/{{ item.id }}" class="btn btn-small btn-secondary">Edit</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Add New Item</h2>
 <form method="POST" action="/admin/add" class="admin-add-form" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <input type="text" name="name" placeholder="Item name" required>
     <input type="number" name="price" placeholder="Price" required>
-    <input type="file" name="image" accept="image/">
+    <input type="file" name="image" accept="image/*">
     <select name="category" required>
         <option value="" disabled selected>Select category</option>
         <option value="Swallows">Swallows</option>
@@ -103,44 +71,33 @@
     <button type="submit" class="btn">Add Item</button>
 </form>
 
-    <h2>Manage Orders</h2>
-    <table class="admin-table">
-      <tr>
+<h2>Manage Orders</h2>
+<table class="admin-table">
+    <tr>
         <th>Order ID</th>
         <th>Customer</th>
         <th>Status</th>
         <th>Update</th>
-      </tr>
-      {% for order in orders %}
-      <tr>
+    </tr>
+    {% for order in orders %}
+    <tr>
         <td>{{ order.id }}</td>
         <td>{{ order.user.username }}</td>
         <td>{{ order.status }}</td>
         <td>
-          <form action="{{ url_for('update_order_status', order_id=order.id) }}" method="POST">
-            <select name="status">
-              <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
-              <option value="Preparing" {% if order.status == 'Preparing' %}selected{% endif %}>Preparing</option>
-              <option value="Out for Delivery" {% if order.status == 'Out for Delivery' %}selected{% endif %}>Out for Delivery</option>
-              <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
-            </select>
-            <button type="submit" class="btn">Update</button>
-          </form>
+            <form action="{{ url_for('update_order_status', order_id=order.id) }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <select name="status">
+                    <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="Preparing" {% if order.status == 'Preparing' %}selected{% endif %}>Preparing</option>
+                    <option value="Out for Delivery" {% if order.status == 'Out for Delivery' %}selected{% endif %}>Out for Delivery</option>
+                    <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                </select>
+                <button type="submit" class="btn">Update</button>
+            </form>
         </td>
-      </tr>
-      {% endfor %}
-    </table>
-<script>
-function toggleUserMenu() {
-    document.querySelector('.user-menu').classList.toggle('open');
-}
+    </tr>
+    {% endfor %}
+</table>
 
-document.addEventListener('click', function(e) {
-    const menu = document.querySelector('.user-menu');
-    if (menu && !menu.contains(e.target)) {
-        menu.classList.remove('open');
-    }
-});
-</script>
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}ACiD'S TREATS{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="nav-left">
+            <h1>ACiD'S TREATS</h1>
+        </div>
+        <div class="nav-center">
+            <a href="/">Home</a>
+            <a href="#menu">Menu</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+        </div>
+        <div class="nav-right">
+            <span id="cart-total">Cart: ₦0</span>
+            <a href="/cart">View Cart</a>
+
+            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark/light mode">🌙</button>
+
+            {% if current_user.is_authenticated %}
+                <div class="user-menu">
+                    <button class="user-menu-btn" onclick="toggleUserMenu()">
+                        Welcome, {{ current_user.username }}
+                        <span class="chevron">▾</span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="/profile">My Profile</a>
+                        <a href="/history">Order History</a>
+                        {% if current_user.is_admin %}
+                            <a href="/admin">Admin</a>
+                        {% endif %}
+                        <a href="/logout">Log out</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="/login">Log In</a>
+                <a href="/signup">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <script>
+        (function() {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const root = document.documentElement;
+
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                root.setAttribute('data-theme', 'light');
+                if (toggleBtn) toggleBtn.textContent = '☀️';
+            }
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    const isLight = root.getAttribute('data-theme') === 'light';
+                    if (isLight) {
+                        root.removeAttribute('data-theme');
+                        localStorage.setItem('theme', 'dark');
+                        toggleBtn.textContent = '🌙';
+                    } else {
+                        root.setAttribute('data-theme', 'light');
+                        localStorage.setItem('theme', 'light');
+                        toggleBtn.textContent = '☀️';
+                    }
+                });
+            }
+        })();
+
+        function toggleUserMenu() {
+            document.querySelector('.user-menu').classList.toggle('open');
+        }
+
+        document.addEventListener('click', function(e) {
+            const menu = document.querySelector('.user-menu');
+            if (menu && !menu.contains(e.target)) {
+                menu.classList.remove('open');
+            }
+        });
+    </script>
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

@@ -1,199 +1,170 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>ACiD'S TREATS</title>
+{% extends "base.html" %}
 
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Your Menu - ACiD'S TREATS{% endblock %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-        <div class="navbar">
-                <div class="nav-left">
-                    <h1>ACiD'S TREATS</h1>
-                </div>
-                <div class="nav-center">
-                    <a href="/">Home</a>
-                    <a href="#menu">Menu</a>
-                    <a href="/about">About</a>
-                    <a href="/contact">Contact</a>
-                </div>
-            <div class="nav-right">
-                <span id="cart-total">Cart: ₦0</span>
-                <a href="/cart">View Cart</a>
-                   {% if current_user.is_authenticated %}
-                     <div class="user-menu">
-                        <button class="user-menu-btn" onclick="toggleUserMenu()">
-                            Welcome, {{ current_user.username }}
-                            <span class="chevron">▾</span>
-                        </button>
-                        <div class="user-dropdown" id="userDropdown">
-                            <a href="/profile">My Profile</a>
-                            <a href="/history">Order History</a>
-                            <a href="/history">Order History</a>
-                            <a href="/admin">Admin</a>
-                            <a href="/logout">Log out</a>
-                        </div>
-                    </div>
-                   {% else %}
-                      <a href="/login">Log In</a>
-                      <a href="/signup">Sign Up</a>
-                  {% endif %}
-            </div>
-        </div>
-        <div class="hero">
-            <div class="hero-text">
-                <p class="hero-tagline">WELCOME TO ACiD'S TREATS</p>
-                <h1 class="hero-heading">Taste Home,<br>Every Time</h1>
-                <p class="hero-sub">Freshly made Nigerian dishes made with love, order online, or get it delivered to your doorstep.</p>
-                <a href="#menu" class="btn hero-btn">Order Now</a>
-                <a href="#menu" class="btn btn-outline hero-btn">View Menu</a>
-            </div>
-        </div>
+{% block content %}
+<div class="hero">
+    <div class="hero-text">
+        <p class="hero-tagline">WELCOME TO ACiD'S TREATS</p>
+        <h1 class="hero-heading">Taste Home,<br>Every Time</h1>
+        <p class="hero-sub">Freshly made Nigerian dishes made with love, order online, or get it delivered to your doorstep</p>
+        <a href="#menu" class="btn hero-btn">Order Now</a>
+        <a href="#menu" class="btn btn-outline hero-btn">View Menu</a>
+    </div>
+</div>
 
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon">🍲</div>
-                <div>
-                    <h3>Fresh Ingredients</h3>
-                    <p>We cook with the freshest ingredients, every single day.</p>
-                </div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🛵</div>
-                <div>
-                    <h3>Fast Delivery</h3>
-                    <p>Get your favorite meals delivered hot and on time.</p>
-                </div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🔒</div>
-                <div>
-                    <h3>Secure Ordering</h3>
-                    <p>Order safely with a simple, secure checkout process.</p>
-                </div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">❤️</div>
-                <div>
-                    <h3>Customer Satisfaction</h3>
-                    <p>Your happiness is our priority, every order, every time.</p>
-                </div>
-            </div>
+<div class="features">
+    <div class="feature">
+        <div class="feature-icon">🍲</div>
+        <div>
+            <h3>Fresh Ingredients</h3>
+            <p>We cook with the freshest ingredients, every single day.</p>
         </div>
-        <div class="section-header">
-            <div>
-                <h2 class="section-title">Popular Meals</h2>
-                <p class="section-sub">Our most loved dishes, made fresh daily.</p>
-            </div>
-            <a href="#menu" class="view-full-link">View Full Menu →</a>
+    </div>
+    <div class="feature">
+        <div class="feature-icon">🚴</div>
+        <div>
+            <h3>Fast Delivery</h3>
+            <p>Get your favorite meals delivered hot and on time.</p>
         </div>
-        <ul class="menu-grid popular-grid">
-            {% for item in popular_items %}
-                <li class="food-card" data-price="{{ item.price }}">
-                    {% if item.image_url %}
-                        <img src="{{ item.image_url }}" alt="{{ item.name }}">
-                    {% endif %}
-                    <h3>{{ item.name }}</h3>
-                    <p class="price">₦{{ item.price }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-        <input type="text" id="menu-search" placeholder="Search menu..." class="menu-search">
-            <div class="category-filters">
-                <a href="/#menu" class="{% if not selected_category %}active{% endif %}">All</a>
-                <a href="/?category=Swallows#menu" class="{% if selected_category == 'Swallows' %}active{% endif %}">Swallows</a>
-                <a href="/?category=Rice#menu" class="{% if selected_category == 'Rice' %}active{% endif %}">Rice</a>
-                <a href="/?category=Yam & Egg Sauce#menu" class="{% if selected_category == 'Yam & Egg Sauce' %}active{% endif %}">Yam & Egg Sauce</a>
-                <a href="/?category=Noodles#menu" class="{% if selected_category == 'Noodles' %}active{% endif %}">Noodles</a>
-                <a href="/?category=Nigerian Dishes#menu" class="{% if selected_category == 'Nigerian Dishes' %}active{% endif %}">Nigerian Dishes</a>
-                <a href="/?category=International Dishes#menu" class="{% if selected_category == 'International Dishes' %}active{% endif %}">International</a>
-                <a href="/?category=Snacks#menu" class="{% if selected_category == 'Snacks' %}active{% endif %}">Snacks</a>
-                <a href="/?category=Drinks#menu" class="{% if selected_category == 'Drinks' %}active{% endif %}">Drinks</a>
-            </div>
-        <h2 id="menu" class="section-title">Our Menu</h2>
-    <ul class="menu-grid">
-    {% for item in menu_items %}
+    </div>
+    <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div>
+            <h3>Secure Ordering</h3>
+            <p>Order safely with a simple, secure checkout process.</p>
+        </div>
+    </div>
+    <div class="feature">
+        <div class="feature-icon">💗</div>
+        <div>
+            <h3>Customer Satisfaction</h3>
+            <p>Your happiness is our priority, every order, every time.</p>
+        </div>
+    </div>
+</div>
 
+<div class="section-header">
+    <div>
+        <h2 class="section-title">Popular Meals</h2>
+        <p class="section-sub">Our most loved dishes, made fresh daily.</p>
+    </div>
+    <a href="#menu" class="view-full-link">View Full Menu →</a>
+</div>
+
+<ul class="menu-grid popular-grid">
+    {% for item in popular_items %}
         <li class="food-card" data-price="{{ item.price }}">
-             {% if item.image_url %}
+            {% if item.image_url %}
                 <img src="{{ item.image_url }}" alt="{{ item.name }}">
             {% endif %}
-            <h3><a href="{{ url_for('item_detail', item_id=item.id) }}">{{ item.name }}</a></h3>
+            <h3>{{ item.name }}</h3>
             <p class="price">₦{{ item.price }}</p>
-            <form action="/add_order" method="POST">
-                <input type="hidden" name="food" value="{{ item.name }}">
-                <div class="qty-stepper">
-                    <button type="button" class="qty-btn minus">−</button>
-                    <input type="number" name="quantity" value="1" min="1" readonly>
-                    <button type="button" class="qty-btn plus">+</button>
-                </div>
-                <input type="text" name="notes" placeholder="e.g. no onions">
-                <button type="submit" class="btn">Add</button>
-            </form>
         </li>
     {% endfor %}
-    </ul>
+</ul>
 
+<input type="text" id="menu-search" placeholder="Search menu..." class="menu-search">
+<div class="category-filters">
+    <a href="/#menu" class="{% if not selected_category %}active{% endif %}">All</a>
+    <a href="/?category=Swallows#menu" class="{% if selected_category == 'Swallows' %}active{% endif %}">Swallows</a>
+    <a href="/?category=Rice#menu" class="{% if selected_category == 'Rice' %}active{% endif %}">Rice</a>
+    <a href="/?category=Yam & Egg Sauce#menu" class="{% if selected_category == 'Yam & Egg Sauce' %}active{% endif %}">Yam & Egg Sauce</a>
+    <a href="/?category=Noodles#menu" class="{% if selected_category == 'Noodles' %}active{% endif %}">Noodles</a>
+    <a href="/?category=Nigerian Dishes#menu" class="{% if selected_category == 'Nigerian Dishes' %}active{% endif %}">Nigerian Dishes</a>
+    <a href="/?category=International Dishes#menu" class="{% if selected_category == 'International Dishes' %}active{% endif %}">International Dishes</a>
+    <a href="/?category=Snacks#menu" class="{% if selected_category == 'Snacks' %}active{% endif %}">Snacks</a>
+    <a href="/?category=Drinks#menu" class="{% if selected_category == 'Drinks' %}active{% endif %}">Drinks</a>
+</div>
+
+<h2 id="menu" class="section-title">Our Menu</h2>
+<ul class="menu-grid">
+{% for item in menu_items %}
+
+    <li class="food-card" data-price="{{ item.price }}">
+        {% if item.image_url %}
+            <img src="{{ item.image_url }}" alt="{{ item.name }}">
+        {% endif %}
+        <h3><a href="{{ url_for('item_detail', item_id=item.id) }}">{{ item.name }}</a></h3>
+        <p class="price">₦{{ item.price }}</p>
+        <form action="/add_order" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="food" value="{{ item.name }}">
+            <div class="qty-stepper">
+                <button type="button" class="qty-btn minus">-</button>
+                <input type="number" name="quantity" value="1" min="1" readonly>
+                <button type="button" class="qty-btn plus">+</button>
+            </div>
+            <input type="text" name="notes" placeholder="e.g. no onions">
+            <button type="submit" class="btn">Add</button>
+        </form>
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}
+
+{% block scripts %}
 <script>
 let cartTotal = 0;
 
 document.querySelectorAll('.qty-stepper').forEach(stepper => {
-  const input = stepper.querySelector('input[name="quantity"]');
-  const minus = stepper.querySelector('.minus');
-  const plus = stepper.querySelector('.plus');
+    const input = stepper.querySelector('input[name="quantity"]');
+    const minus = stepper.querySelector('.minus');
+    const plus = stepper.querySelector('.plus');
 
-  plus.addEventListener('click', () => {
-    input.value = parseInt(input.value) + 1;
-  });
+    plus.addEventListener('click', () => {
+        input.value = parseInt(input.value) + 1;
+    });
 
-  minus.addEventListener('click', () => {
-    if (parseInt(input.value) > 1) {
-      input.value = parseInt(input.value) - 1;
-    }
-  });
+    minus.addEventListener('click', () => {
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+    });
 });
 
 document.querySelectorAll('.food-card form').forEach(form => {
-  form.addEventListener('submit', function(e) {
-    e.preventDefault(); // stop page reload
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // stop page reload
 
-    const card = form.closest('.food-card');
-    const price = parseFloat(card.dataset.price);
-    const quantity = parseInt(form.querySelector('input[name="quantity"]').value) || 1;
-    const addBtn = form.querySelector('button[type="submit"]');
+        const card = form.closest('.food-card');
+        const price = parseFloat(card.dataset.price);
+        const quantity = parseInt(form.querySelector('input[name="quantity"]').value) || 1;
+        const addBtn = form.querySelector('button[type="submit"]');
 
-    // send the order to the server in the background
-    fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form)
+        // send the order to the server in the background
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form)
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.error('Add to cart failed:', response.status);
+                alert('Could not add item to cart. Please try again.');
+                return;
+            }
+
+            // update the live total instantly
+            cartTotal += price * quantity;
+            document.getElementById('cart-total').textContent = 'Cart: ₦' + cartTotal;
+
+            // button feedback
+            const originalText = addBtn.textContent;
+            addBtn.textContent = 'Added ✓';
+            addBtn.classList.add('added');
+            addBtn.disabled = true;
+
+            setTimeout(() => {
+                addBtn.textContent = originalText;
+                addBtn.classList.remove('added');
+                addBtn.disabled = false;
+            }, 1000);
+        })
+        .catch(error => {
+            console.error('Network error:', error);
+        });
     });
-
-    // update the live total instantly
-    cartTotal += price * quantity;
-    document.getElementById('cart-total').textContent = 'Cart: ₦' + cartTotal;
-
-
-    // button feedback
-    const originalText = addBtn.textContent;
-    addBtn.textContent = 'Added ✓';
-    addBtn.classList.add('added');
-    addBtn.disabled = true;
-
-    setTimeout(() => {
-      addBtn.textContent = originalText;
-      addBtn.classList.remove('added');
-      addBtn.disabled = false;
-    }, 1000);
-  });
 });
-function toggleUserMenu() {
-  document.querySelector('.user-menu').classList.toggle('open');
-}
-function toggleUserMenu() {
-    document.querySelector('.user-menu').classList.toggle('open');
-}
 
 document.getElementById('menu-search').addEventListener('input', function() {
     const query = this.value.toLowerCase();
@@ -202,13 +173,5 @@ document.getElementById('menu-search').addEventListener('input', function() {
         card.style.display = name.includes(query) ? '' : 'none';
     });
 });
-
-document.addEventListener('click', function(e) {
-    const menu = document.querySelector('.user-menu');
-    if (menu && !menu.contains(e.target)) {
-        menu.classList.remove('open');
-    }
-});
 </script>
-</body>
-</html>
+{% endblock %}
