@@ -4,12 +4,15 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from flask_wtf.csrf import  CSRFProtect
 from dotenv import load_dotenv
 from flask_mail import Mail, Message
+
 import secrets
 import random
 from datetime import datetime, timedelta
 
 from datetime import datetime, timedelta
 import os
+
+from authlib.integrations.flask_client import OAuth
 import requests
 
 
@@ -54,8 +57,29 @@ db_port = os.environ.get('DB_PORT')
 db_name = os.environ.get('DB_NAME')
 PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
 
+
+
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+oauth = OAuth(app)
+google = oauth.register(
+    name='google',
+    client_id=os.environ.get('GOOGLE_CLIENT_ID'),
+    client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    client_kwargs={'scope': 'openid email profile'}
+)
+
+facebook = oauth.register(
+    name='facebook',
+    client_id=os.environ.get('FACEBOOK_CLIENT_ID'),
+    client_secret=os.environ.get('FACEBOOK_CLIENT_SECRET'),
+    access_token_url='https://graph.facebook.com/oauth/access_token',
+    authorize_url='https://www.facebook.com/dialog/oauth',
+    api_base_url='https://graph.facebook.com/',
+    client_kwargs={'scope': 'email public_profile'}
+)
 
 from models import db, Order, MenuItem, User, ContactMessage, CartItem, PromoCode
 db.init_app(app)
@@ -150,7 +174,7 @@ def checkout():
         (MenuItem.query.filter_by(name=item.food).first().price or 0) * item.quantity
         for item in cart_items
     )
-    return render_template('checkout.html', ordered_food=cart_items, total=total)
+    return render_template('checkout.html', ordered_food=cart_items, total=total, delivery_fee=1000)
 
 @app.route('/initialize_payment', methods=['POST'])
 @login_required
@@ -537,6 +561,83 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/login/google')
+def google_login():
+    redirect_uri = url_for('google_callback', _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+
+@app.route('/login/google/callback')
+def google_callback():
+    token = google.authorize_access_token()
+    user_info = token.get('userinfo')
+
+    if not user_info:
+        return redirect(url_for('login'))
+
+    google_id = user_info['sub']
+    email = user_info['email']
+    name = user_info.get('name', email.split('@')[0])
+
+    user = User.query.filter_by(google_id=google_id).first()
+
+    if not user:
+        user = User.query.filter_by(email=email).first()
+        if user:
+            user.google_id = google_id
+        else:
+            user = User(
+                username=email.split('@')[0],
+                email=email,
+                full_name=name,
+                google_id=google_id,
+                is_verified=True
+            )
+            db.session.add(user)
+        db.session.commit()
+
+    login_user(user)
+    return redirect('/')
+
+@app.route('/login/facebook')
+def facebook_login():
+    redirect_uri = url_for('facebook_callback', _external=True)
+    return facebook.authorize_redirect(redirect_uri)
+
+
+@app.route('/login/facebook/callback')
+def facebook_callback():
+    token = facebook.authorize_access_token()
+    resp = facebook.get('me?fields=id,name,email', token=token)
+    profile = resp.json()
+
+    facebook_id = profile['id']
+    email = profile.get('email')
+    name = profile.get('name', 'Facebook User')
+
+    if not email:
+        flash('Facebook login failed: no email permission granted.')
+        return redirect(url_for('login'))
+
+    user = User.query.filter_by(facebook_id=facebook_id).first()
+
+    if not user:
+        user = User.query.filter_by(email=email).first()
+        if user:
+            user.facebook_id = facebook_id
+        else:
+            user = User(
+                username=email.split('@')[0],
+                email=email,
+                full_name=name,
+                facebook_id=facebook_id,
+                is_verified=True
+            )
+            db.session.add(user)
+        db.session.commit()
+
+    login_user(user)
+    return redirect('/')
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():

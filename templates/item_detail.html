@@ -11,7 +11,7 @@
 
     <h2>{{ item.name }}</h2>
     <p class="price">₦{{ item.price }}</p>
-    <p class="category">Category: {{ item.category }}</p>
+    <p class="category"><i class="fa-solid fa-tag"></i> Category: {{ item.category }}</p>
 
     {% if not item.available %}
         <p class="unavailable">Currently unavailable</p>
@@ -20,16 +20,25 @@
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="food" value="{{ item.name }}">
             <div class="qty-stepper">
-                <button type="button" class="qty-btn minus">-</button>
-                <input type="number" name="quantity" value="1" min="1">
-                <button type="button" class="qty-btn plus">+</button>
+                <button type="button" class="qty-btn minus"><i class="fa-solid fa-minus"></i></button>
+                  <input type="number" name="quantity" value="1" min="1">
+                <button type="button" class="qty-btn plus"><i class="fa-solid fa-plus"></i></button>
             </div>
-            <input type="text" name="notes" placeholder="e.g. no onions">
-            <button type="submit" class="btn">Add to Cart</button>
+
+            <div class="notes-field">
+                <i class="fa-solid fa-pen"></i>
+                <input type="text" name="notes" placeholder="e.g. no onions">
+            </div>
+
+           <button type="submit" class="btn">
+                <i class="fa-solid fa-cart-plus"></i> Add to Cart
+           </button>
         </form>
     {% endif %}
 
-    <a href="/#menu" class="btn-secondary">Back to Menu</a>
+        <a href="/#menu" class="btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to Menu
+        </a>
 </div>
 
 {% endblock %}

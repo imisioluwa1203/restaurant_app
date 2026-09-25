@@ -8,12 +8,22 @@
         {% for order in orders %}
             <div class="order-card">
                 <p class="order-header">
-                    <span class="order-type-badge">{{ order.order_type }}</span>
+                   <span class="order-type-badge">
+                        <i class="fa-solid {% if order.order_type == 'Delivery' %}fa-motorcycle{% else %}fa-bag-shopping{% endif %}"></i>
+                        {{ order.order_type }}
+                   </span>
                     Total: ₦{{ order.total }}
                 </p>
-                <p class="order-items">{{ order.items }}</p>
-                 <p>Status: <span class="status-badge status-{{ order.status | lower | replace(' ', '-') }}">{{ order.status }}</span></p>
-                <p class="order-date">{{ order.created_at.strftime('%b %d, %Y — %I:%M %p') }}</p>
+                 <p class="order-items">{{ order.items }}</p>
+                <p>Status:
+                    <span class="status-badge status-{{ order.status | lower | replace(' ', '-') }}">
+                        <i class="fa-solid fa-circle status-dot"></i> {{ order.status }}
+                    </span>
+                </p>
+               <p class="order-date">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    {{ order.created_at.strftime('%b %d, %Y — %I:%M %p') }}
+               </p>
             </div>
         {% endfor %}
     {% else %}

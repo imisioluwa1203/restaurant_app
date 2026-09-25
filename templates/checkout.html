@@ -3,7 +3,7 @@
 {% block title %}Your Checkout - ACiD'S TREATS{% endblock %}
 
 {% block content %}
-
+  <div class="page-container">
     <h1>Your Receipt</h1>
 
     {% if ordered_food %}
@@ -19,21 +19,26 @@
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="order-type-select">
                 <label class="radio-option">
-                    <input type="radio" name="order_type" value="Delivery" checked> Delivery
+                    <input type="radio" name="order_type" value="Delivery" checked>
+                    <i class="fa-solid fa-motorcycle"></i> Delivery
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="order_type" value="Pickup"> Pickup
+                    <input type="radio" name="order_type" value="Pickup">
+                    <i class="fa-solid fa-bag-shopping"></i> Pickup
                 </label>
             </div>
-            <div class="promo-field">
-                <label>Promo Code (optional)</label>
+           <div class="promo-field">
+                <label><i class="fa-solid fa-tag"></i> Promo Code (optional)</label>
                 <input type="text" name="promo_code" placeholder="Enter code">
-            </div>
+           </div>
 
-            <button type="submit" class="btn">Place Order</button>
+            <button type="submit" class="btn">
+                <i class="fa-solid fa-lock"></i> Place Order
+            </button>
         </form>
     {% else %}
         <p>Your cart is empty — nothing to check out.</p>
     {% endif %}
+  </div>
 
 {% endblock %}

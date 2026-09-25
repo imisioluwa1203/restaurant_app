@@ -4,6 +4,7 @@
     <title>Sign Up - ACiD'S TREATS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body class="auth-page">
     <div class="auth-hero">
@@ -46,14 +47,17 @@
             <div class="auth-divider"><span>or continue with</span></div>
 
             <div class="social-auth">
-                <button type="button" class="social-btn" disabled>
-                    <img src="https://www.google.com/favicon.ico" alt="Google" class="social-icon">
-                    Google
-                </button>
-                <button type="button" class="social-btn" disabled>
-                    <span class="social-icon">📘</span>
-                    Facebook
-                </button>
+                <a href="{{ url_for('google_login') }}" class="social-btn-icon" aria-label="Continue with Google">
+                        <svg viewBox="0 0 48 48" width="24" height="24">
+                            <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.1 5.4 29.3 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.4-.4-3.5z"/>
+                            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.4 18.9 12 24 12c3.1 0 5.8 1.1 8 3l6-6C34.1 5.4 29.3 3 24 3 16.3 3 9.7 7.4 6.3 14.7z"/>
+                            <path fill="#4CAF50" d="M24 45c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 36.5 26.7 37 24 37c-5.3 0-9.7-3.1-11.3-7.9l-6.5 5C9.6 40.6 16.2 45 24 45z"/>
+                            <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.9 2.6-2.6 4.8-4.9 6.4l6.2 5.2C39.6 37.2 44 31 44 24c0-1.2-.1-2.4-.4-3.5z"/>
+                        </svg>
+                </a>
+                <a href="url_for('facebook_login')" class="social-btn-icon"  aria-label="Continue with Facebook">
+                    <i class="fa-brands fa-facebook"></i>
+                </a>
                 <button type="button" class="social-btn" disabled>
                     <span class="social-icon"></span>
                     Apple

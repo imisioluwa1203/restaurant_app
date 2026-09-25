@@ -3,7 +3,7 @@
 {% block title %}Your Cart - ACiD'S TREATS{% endblock %}
 
 {% block content %}
-
+     <div class="page-container">
         <h1>Your Cart</h1>
 
            {% if ordered_food %}
@@ -14,7 +14,9 @@
                             <form action="/remove_order" method="POST">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="item_id" value="{{ item.id }}">
-                                <button type="submit" class="btn btn-remove">Remove</button>
+                                <button type="submit" class="btn-remove">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </form>
                         </li>
                     {% endfor %}
@@ -25,5 +27,6 @@
                 <p>Your cart is empty.</p>
                 <a href="/" class="btn">Back to Menu</a>
         {% endif %}
+     </div>
 {% endblock %}
 
