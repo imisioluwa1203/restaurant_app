@@ -4,6 +4,14 @@
 
 {% block content %}
     <h1>Your Order History</h1>
+       <div class="filter-tabs">
+            <a href="{{ url_for('history') }}" class="filter-tab {% if status_filter == 'All' %}active{% endif %}">All</a>
+            <a href="{{ url_for('history', status='Pending') }}" class="filter-tab {% if status_filter == 'Pending' %}active{% endif %}">Pending</a>
+            <a href="{{ url_for('history', status='Preparing') }}" class="filter-tab {% if status_filter == 'Preparing' %}active{% endif %}">Preparing</a>
+            <a href="{{ url_for('history', status='Out for delivery') }}" class="filter-tab {% if status_filter == 'Out for delivery' %}active{% endif %}">Out for delivery</a>
+           <a href="{{ url_for('history', status='Delivered') }}" class="filter-tab {% if status_filter == 'Delivered' %}active{% endif %}">Delivery</a>
+
+       </div>
     {% if orders %}
         {% for order in orders %}
             <div class="order-card">

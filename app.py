@@ -311,12 +311,15 @@ def place_order():
 
     return render_template('order_confirmed.html', order_type=order_type)
 
-
 @app.route('/history')
 @login_required
 def history():
-    orders = Order.query.order_by(Order.created_at.desc()).all()
-    return render_template('history.html', orders=orders)
+    status_filter = request.args.get('status', 'All')
+    query = Order.query.order_by(Order.created_at.desc())
+    if status_filter != 'All':
+        query = query.filter(Order.status == status_filter)
+    orders = query.all()
+    return render_template('history.html', orders=orders, status_filter=status_filter)
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
