@@ -39,7 +39,7 @@ def send_email(to_email, subject, body_text):
 
 
 app = Flask(__name__)
-app.secret_key = 'acid-treats-secret-key'
+app.secret_key = os.getenv("SECRET_KEY", "dev-only-key")
 csrf = CSRFProtect(app)
 
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
