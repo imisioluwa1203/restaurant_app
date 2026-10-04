@@ -25,8 +25,6 @@
                <span id="cart-total">₦0</span>
             </a>
 
-            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark/light mode">🌙</button>
-
             {% if current_user.is_authenticated %}
                 <div class="user-menu">
                     <button class="user-menu-btn" onclick="toggleUserMenu()">
@@ -52,31 +50,6 @@
     {% block content %}{% endblock %}
 
     <script>
-        (function() {
-            const toggleBtn = document.getElementById('theme-toggle');
-            const root = document.documentElement;
-
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            if (savedTheme === 'light') {
-                root.setAttribute('data-theme', 'light');
-                if (toggleBtn) toggleBtn.textContent = '☀️';
-            }
-
-            if (toggleBtn) {
-                toggleBtn.addEventListener('click', () => {
-                    const isLight = root.getAttribute('data-theme') === 'light';
-                    if (isLight) {
-                        root.removeAttribute('data-theme');
-                        localStorage.setItem('theme', 'dark');
-                        toggleBtn.textContent = '🌙';
-                    } else {
-                        root.setAttribute('data-theme', 'light');
-                        localStorage.setItem('theme', 'light');
-                        toggleBtn.textContent = '☀️';
-                    }
-                });
-            }
-        })();
 
         function toggleUserMenu() {
             document.querySelector('.user-menu').classList.toggle('open');
