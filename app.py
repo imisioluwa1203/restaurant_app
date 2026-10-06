@@ -39,6 +39,8 @@ def send_email(to_email, subject, body_text):
 
 
 app = Flask(__name__)
+from werkzeug.middleware.proxy_fix import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 app.secret_key = os.getenv("SECRET_KEY", "dev-only-key")
 csrf = CSRFProtect(app)
 
