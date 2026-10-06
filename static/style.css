@@ -1460,3 +1460,24 @@ form .btn[type="submit"] {
     color: #fff;
     border-color: var(--accent, #ff5722);
 }
+
+@media (max-width: 768px) {
+  .nav-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-right a {
+    margin: 0;
+  }
+
+  .nav-right .cart-link {
+    order: 2;
+    margin-left: auto;
+  }
+}
