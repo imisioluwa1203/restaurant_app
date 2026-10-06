@@ -568,7 +568,7 @@ def login():
 
 @app.route('/login/google')
 def google_login():
-    redirect_uri = url_for('google_callback', _external=True)
+    redirect_uri = url_for('google_callback', _external=True, _scheme='https')
     return google.authorize_redirect(redirect_uri)
 
 
@@ -606,7 +606,7 @@ def google_callback():
 
 @app.route('/login/facebook')
 def facebook_login():
-    redirect_uri = url_for('facebook_callback', _external=True)
+    redirect_uri = url_for('facebook_callback', _external=True, _scheme='https')
     return facebook.authorize_redirect(redirect_uri)
 
 
