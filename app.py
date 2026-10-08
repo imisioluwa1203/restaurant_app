@@ -620,9 +620,8 @@ def facebook_callback():
     name = profile.get('name', 'Facebook User')
 
     if not email:
-        flash('Facebook login failed: no email permission granted.')
-        redirect_uri = url_for('facebook_callback', _external=True, _scheme='https')
-
+         flash('Facebook login failed: no email permission granted.')
+         return redirect(url_for('login'))
     user = User.query.filter_by(facebook_id=facebook_id).first()
 
     if not user:
