@@ -1481,3 +1481,7 @@ form .btn[type="submit"] {
     margin-left: auto;
   }
 }
+
+.top-item { color: #222; }
+.menu-table td { color: #222; }
+.popular-card h3 { color: #d35400; }
