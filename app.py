@@ -607,7 +607,7 @@ def google_callback():
 @app.route('/login/facebook')
 def facebook_login():
     redirect_uri = url_for('facebook_callback', _external=True, _scheme='https')
-    return oauth.google.authorize_redirect(redirect_uri, prompt='select_account')
+    return facebook.authorize_redirect(redirect_uri)
 
 @app.route('/login/facebook/callback')
 def facebook_callback():
