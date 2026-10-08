@@ -607,8 +607,7 @@ def google_callback():
 @app.route('/login/facebook')
 def facebook_login():
     redirect_uri = url_for('facebook_callback', _external=True, _scheme='https')
-    return facebook.authorize_redirect(redirect_uri)
-
+    return oauth.google.authorize_redirect(redirect_uri, prompt='select_account')
 
 @app.route('/login/facebook/callback')
 def facebook_callback():
@@ -622,7 +621,7 @@ def facebook_callback():
 
     if not email:
         flash('Facebook login failed: no email permission granted.')
-        return redirect(url_for('login'))
+        redirect_uri = url_for('facebook_callback', _external=True, _scheme='https')
 
     user = User.query.filter_by(facebook_id=facebook_id).first()
 
