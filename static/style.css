@@ -1485,3 +1485,33 @@ form .btn[type="submit"] {
 .top-item { color: #222; }
 .menu-table td { color: #222; }
 .popular-card h3 { color: #d35400; }
+
+@media (max-width: 600px) {
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .menu-grid .food-card {
+    padding: 0 0 10px;
+    overflow: hidden;
+    border-radius: 14px;
+    text-align: left;
+  }
+  .menu-grid .food-card img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 14px 14px 0 0;
+    display: block;
+  }
+  .menu-grid .food-card h3 { font-size: 14px; margin: 8px 10px 2px; }
+  .menu-grid .food-card h3 a { color: #d4572a; }
+  .menu-grid .food-card .price { font-size: 13px; margin: 0 10px 6px; }
+  .menu-grid .food-card form { padding: 0 10px; }
+  .menu-grid .food-card .qty-stepper { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
+  .menu-grid .food-card .qty-stepper input { width: 34px; text-align: center; padding: 4px 0; font-size: 12px; }
+  .menu-grid .food-card .qty-btn { padding: 4px 8px; font-size: 13px; }
+  .menu-grid .food-card input[name="notes"] { width: 100%; box-sizing: border-box; font-size: 12px; padding: 6px; margin-bottom: 6px; }
+  .menu-grid .food-card .btn { width: 100%; padding: 7px 0; font-size: 13px; border-radius: 10px; }
+}
