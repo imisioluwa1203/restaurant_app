@@ -1514,4 +1514,26 @@ form .btn[type="submit"] {
   .menu-grid .food-card .qty-btn { padding: 4px 8px; font-size: 13px; }
   .menu-grid .food-card input[name="notes"] { width: 100%; box-sizing: border-box; font-size: 12px; padding: 6px; margin-bottom: 6px; }
   .menu-grid .food-card .btn { width: 100%; padding: 7px 0; font-size: 13px; border-radius: 10px; }
-}
+
+.oc-page { position: relative; overflow: hidden; min-height: 100vh; padding-bottom: 90px; }
+.oc-bg svg { position: absolute; fill: none; stroke: #ff7a1a; stroke-width: 1.5; opacity: .18; }
+.oc-bg .d1 { top: 6%; left: 4%; transform: rotate(-20deg); }
+.oc-bg .d2 { top: 10%; right: 5%; }
+.oc-bg .d3 { top: 46%; left: 3%; }
+.oc-bg .d4 { top: 38%; right: 8%; }
+.oc-bg .d5 { bottom: 18%; left: 14%; }
+.oc-bg .d6 { bottom: 8%; right: 6%; transform: rotate(15deg); }
+.oc-wrap { position: relative; z-index: 1; max-width: 420px; margin: 0 auto; padding: 48px 20px; text-align: center; color: #fff; }
+.oc-burst { position: relative; width: 170px; height: 170px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; }
+.oc-burst span { position: absolute; left: 50%; top: 50%; width: 4px; height: 14px; margin: -7px 0 0 -2px; border-radius: 3px; background: var(--c); transform: rotate(var(--a)) translateY(-76px); animation: oc-pulse 2s ease-in-out infinite; }
+@keyframes oc-pulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+.oc-check { width: 92px; height: 92px; border-radius: 50%; background: #2e9e4f; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 8px rgba(46,158,79,.25); }
+.oc-title { font-size: 28px; margin: 8px 0 6px; }
+.oc-sub { color: #cfcfcf; margin: 0 0 20px; }
+.oc-order, .oc-type { margin: 4px 0; color: #e8e8e8; }
+.oc-eta { margin: 22px 0 26px; padding: 14px; border: 1px solid #333; border-radius: 14px; display: flex; flex-direction: column; gap: 4px; }
+.oc-eta-label { font-size: 13px; color: #aaa; }
+.oc-eta-time { font-size: 22px; font-weight: 600; color: #ff7a1a; }
+.oc-btn { display: block; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 600; margin-bottom: 12px; }
+.oc-btn-main { background: #ff7a1a; color: #fff; }
+.oc-btn-outline { border: 1px solid #ff7a1a; color: #ff7a1a; }
