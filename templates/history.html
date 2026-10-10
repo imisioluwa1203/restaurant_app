@@ -31,6 +31,7 @@
                <p class="order-date">
                     <i class="fa-solid fa-calendar-days"></i>
                     {{ order.created_at.strftime('%b %d, %Y — %I:%M %p') }}
+                   <a class="od-link" href="{{ url_for('order_details', order_id=order.id) }}">View details</a>
                </p>
             </div>
         {% endfor %}

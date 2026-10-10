@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, flash, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_wtf.csrf import  CSRFProtect
@@ -272,7 +272,7 @@ def verify_payment():
 
         db.session.commit()
 
-        return render_template('order_confirmed.html', order_type=order_type)
+        return render_template('order_confirmed.html', order_type=order_type, order_id=new_order.id)
     else:
         return "Payment verification failed. Please contact support.", 400
 
@@ -313,6 +313,14 @@ def place_order():
     db.session.commit()
 
     return render_template('order_confirmed.html', order_type=order_type)
+
+@app.route('/order/<int:order_id>')
+@login_required
+def order_details(order_id):
+    order = Order.query.get_or_404(order_id)
+    if order.user_id != current_user.id and not current_user.is_admin:
+        abort(403)
+    return render_template('order_details.html', order=order)
 
 @app.route('/history')
 @login_required

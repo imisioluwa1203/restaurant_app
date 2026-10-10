@@ -1719,3 +1719,25 @@ form .btn[type="submit"] {
 .oc-sub { margin-bottom: 22px; }
 .oc-bg .d3 { top: 24%; left: 5%; }
 .oc-bg .d4 { top: auto; right: auto; bottom: 6%; left: 40%; }
+
+.od-wrap { max-width: 560px; margin: 0 auto; padding: 24px 16px 100px; color: #fff; }
+.od-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.od-title { font-size: 24px; margin: 0; border: 0; padding: 0; }
+.od-badge { background: #ff7a1a; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+.od-tracker { display: flex; justify-content: space-between; margin-bottom: 20px; }
+.od-step { flex: 1; text-align: center; color: #777; font-size: 11px; }
+.od-dot { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; margin: 0 auto 6px; border-radius: 50%; background: #222; border: 1px solid #333; color: #aaa; font-size: 13px; }
+.od-step.done .od-dot { background: #2e9e4f; border-color: #2e9e4f; color: #fff; }
+.od-step.active .od-dot { background: #ff7a1a; border-color: #ff7a1a; color: #fff; }
+.od-step.done, .od-step.active { color: #fff; }
+.od-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 14px; padding: 16px; margin-bottom: 14px; color: #eee; }
+.od-h2 { font-size: 15px; margin: 0 0 10px; color: #ff7a1a; border: 0; padding: 0; }
+.od-row { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid #262626; font-size: 14px; }
+.od-row:last-child { border-bottom: 0; }
+.od-row span { color: #aaa; }
+.od-item { padding: 8px 0; border-bottom: 1px solid #262626; font-size: 14px; }
+.od-item:last-child { border-bottom: 0; }
+.od-total { display: flex; justify-content: space-between; font-size: 18px; }
+.od-total strong { color: #ff7a1a; }
+
+.od-link { display: inline-block; margin-top: 8px; color: #ff7a1a; font-weight: 600; font-size: 13px; text-decoration: none; }

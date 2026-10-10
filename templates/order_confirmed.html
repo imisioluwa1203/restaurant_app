@@ -46,7 +46,7 @@
     </div>
     {% endif %}
 
-    <a class="oc-btn oc-btn-main" href="/profile">View Order Details</a>
+    <a class="oc-btn oc-btn-main" href="{% if order_id %}{{ url_for('order_details', order_id=order_id) }}{% else %}/history{% endif %}">View Order Details</a>
     <a class="oc-btn oc-btn-outline" href="/">Back to Home</a>
   </div>
 </div>

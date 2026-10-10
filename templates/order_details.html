@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }} - ACiD'S TREATS{% endblock %}
+{% block content %}
+{% set items_text = order.items or '' %}
+{% set order_total = order.total %}
+{% set order_kind = order.order_type %}
+{% set order_status = order.status or 'Pending' %}
+{% set order_when = order.created_at %}
+{% set steps = ['Pending', 'Preparing', 'Out for Delivery', 'Delivered'] %}
+{% set current = steps.index(order_status) if order_status in steps else 0 %}
+
+<div class="page-container od-wrap">
+  <div class="od-head">
+    <h1 class="od-title">Order #{{ order.id }}</h1>
+    <span class="od-badge">{{ order_status }}</span>
+  </div>
+
+  <div class="od-tracker">
+    {% for s in steps %}
+    <div class="od-step {% if loop.index0 < current %}done{% elif loop.index0 == current %}active{% endif %}">
+      <span class="od-dot">{% if loop.index0 < current %}✓{% else %}{{ loop.index }}{% endif %}</span>
+      <span class="od-step-label">{{ s }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="od-card">
+    <h2 class="od-h2">Order info</h2>
+    <div class="od-row"><span>Date</span><strong>{% if order_when %}{{ order_when.strftime('%d %b %Y, %I:%M %p') }}{% else %}—{% endif %}</strong></div>
+    <div class="od-row"><span>Order type</span><strong>{{ order_kind }}</strong></div>
+    <div class="od-row"><span>Payment</span><strong>Paid via Paystack</strong></div>
+    {% if order_kind and order_kind|lower == 'delivery' %}
+    <div class="od-row"><span>Estimated delivery</span><strong>30 – 45 mins</strong></div>
+    {% endif %}
+  </div>
+
+  <div class="od-card">
+    <h2 class="od-h2">Items</h2>
+    {% if items_text %}
+      {% for line in items_text.split(', ') %}
+      <div class="od-item">{{ line }}</div>
+      {% endfor %}
+    {% else %}
+      <div class="od-item">Item details unavailable</div>
+    {% endif %}
+  </div>
+
+  <div class="od-card od-total">
+    <span>Total paid</span>
+    <strong>₦{{ order_total }}</strong>
+  </div>
+
+  <a class="oc-btn oc-btn-main" href="/history">My Orders</a>
+  <a class="oc-btn oc-btn-outline" href="/">Back to Home</a>
+</div>
+{% endblock %}
