@@ -1766,3 +1766,15 @@ form .btn[type="submit"] {
 .policy h1 { color: #fff; }
 .policy h2 { color: #ff7a1a; font-size: 17px; margin-top: 22px; }
 .policy a { color: #ff7a1a; }
+
+.policy ol { padding-left: 22px; }
+.policy ol li {
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  margin: 0 0 10px;
+  list-style: decimal;
+  color: #e8e8e8;
+}
