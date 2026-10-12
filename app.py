@@ -322,7 +322,8 @@ def order_details(order_id):
         abort(403)
     return render_template('order_details.html', order=order)
 
-def first_item_image(items_text, menu_images):
+def item_images(items_text, menu_images, limit=3):
+    found = []
     for part in (items_text or '').split(';'):
         part = part.strip()
         if not part:
@@ -330,9 +331,12 @@ def first_item_image(items_text, menu_images):
         bits = part.split(' ', 1)
         name = bits[1] if bits[0].isdigit() and len(bits) > 1 else part
         name = name.split(' (')[0].strip()
-        if name in menu_images:
-            return menu_images[name]
-    return None
+        img = menu_images.get(name)
+        if img and img not in found:
+            found.append(img)
+        if len(found) == limit:
+            break
+    return found
 
 @app.route('/history')
 @login_required
@@ -345,7 +349,7 @@ def history():
         query = query.filter(Order.status != 'Delivered')
     orders = query.all()
     menu_images = {m.name: m.image_url for m in MenuItem.query.all() if m.image_url}
-    thumbs = {o.id: first_item_image(o.items, menu_images) for o in orders}
+    thumbs = {o.id: item_images(o.items, menu_images) for o in orders}
     return render_template('history.html', orders=orders, status_filter=status_filter, thumbs=thumbs)
 
 @app.route('/profile', methods=['GET', 'POST'])

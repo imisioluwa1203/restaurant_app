@@ -12,12 +12,12 @@
     {% if orders %}
         {% for order in orders %}
            <div class="order-card oh-card">
-              <div class="oh-thumb">
-                {% if thumbs.get(order.id) %}
-                  <img src="{{ thumbs[order.id] }}" alt="">
-                {% else %}
-                  <span class="oh-thumb-ph"><i class="fa-solid fa-utensils"></i></span>
-                {% endif %}
+              <div class="oh-thumb n{{ thumbs[order.id]|length }}">
+                  {% for img in thumbs[order.id] %}
+                    <img src="{{ img }}" alt="">
+                  {% else %}
+                    <span class="oh-thumb-ph"><i class="fa-solid fa-utensils"></i></span>
+                  {% endfor %}
               </div>
               <div class="oh-main">
                 <p class="oh-title">{{ order.items }}</p>

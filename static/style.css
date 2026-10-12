@@ -1754,3 +1754,10 @@ form .btn[type="submit"] {
 .oh-total { font-size: 14px; color: #d4572a; }
 .oh-btn { padding: 6px 10px; font-size: 12px; border: 1px solid #ff7a1a; border-radius: 10px; color: #ff7a1a; font-weight: 600; text-decoration: none; white-space: nowrap; }
 .oh-card .status-badge { font-size: 11px; padding: 3px 8px; }
+
+.oh-thumb { display: grid; gap: 2px; }
+.oh-thumb img { min-height: 0; }
+.oh-thumb.n0 { display: flex; }
+.oh-thumb.n2 { grid-template-columns: 1fr 1fr; }
+.oh-thumb.n3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.oh-thumb.n3 img:first-child { grid-row: 1 / span 2; }
