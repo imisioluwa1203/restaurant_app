@@ -671,6 +671,14 @@ def facebook_callback():
     login_user(user)
     return redirect('/')
 
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
+@app.route('/data-deletion')
+def data_deletion():
+    return render_template('data_deletion.html')
+
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':

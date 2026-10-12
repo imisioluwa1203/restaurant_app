@@ -1761,3 +1761,8 @@ form .btn[type="submit"] {
 .oh-thumb.n2 { grid-template-columns: 1fr 1fr; }
 .oh-thumb.n3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
 .oh-thumb.n3 img:first-child { grid-row: 1 / span 2; }
+
+.policy { max-width: 720px; margin: 0 auto; padding: 24px 16px 100px; line-height: 1.7; color: #e8e8e8; }
+.policy h1 { color: #fff; }
+.policy h2 { color: #ff7a1a; font-size: 17px; margin-top: 22px; }
+.policy a { color: #ff7a1a; }
