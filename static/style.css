@@ -1778,3 +1778,5 @@ form .btn[type="submit"] {
   list-style: decimal;
   color: #e8e8e8;
 }
+
+.nav-logo { height: 26px; width: auto; margin-right: 8px; vertical-align: middle; }

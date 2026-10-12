@@ -6,11 +6,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
 </head>
 <body>
 
     <div class="navbar">
         <div class="nav-left">
+            <img class="nav-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="">
             <h1>ACiD'S TREATS</h1>
         </div>
         <div class="nav-center">
