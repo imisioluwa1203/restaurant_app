@@ -326,9 +326,11 @@ def order_details(order_id):
 @login_required
 def history():
     status_filter = request.args.get('status', 'All')
-    query = Order.query.order_by(Order.created_at.desc())
-    if status_filter != 'All':
-        query = query.filter(Order.status == status_filter)
+    query = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc())
+    if status_filter == 'Delivered':
+        query = query.filter(Order.status == 'Delivered')
+    elif status_filter == 'Active':
+        query = query.filter(Order.status != 'Delivered')
     orders = query.all()
     return render_template('history.html', orders=orders, status_filter=status_filter)
 

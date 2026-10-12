@@ -1741,3 +1741,4 @@ form .btn[type="submit"] {
 .od-total strong { color: #ff7a1a; }
 
 .od-link { display: inline-block; margin-top: 8px; color: #ff7a1a; font-weight: 600; font-size: 13px; text-decoration: none; }
+.order-card .od-link { display: block; margin-top: 10px; }
