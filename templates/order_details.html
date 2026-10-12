@@ -37,7 +37,7 @@
   <div class="od-card">
     <h2 class="od-h2">Items</h2>
     {% if items_text %}
-      {% for line in items_text.split(', ') %}
+     {% for line in items_text.split('; ') %}
       <div class="od-item">{{ line }}</div>
       {% endfor %}
     {% else %}

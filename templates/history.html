@@ -11,26 +11,24 @@
        </div>
     {% if orders %}
         {% for order in orders %}
-            <div class="order-card">
-                <p class="order-header">
-                   <span class="order-type-badge">
-                        <i class="fa-solid {% if order.order_type == 'Delivery' %}fa-motorcycle{% else %}fa-bag-shopping{% endif %}"></i>
-                        {{ order.order_type }}
-                   </span>
-                    Total: ₦{{ order.total }}
-                </p>
-                 <p class="order-items">{{ order.items }}</p>
-                <p>Status:
-                    <span class="status-badge status-{{ order.status | lower | replace(' ', '-') }}">
-                        <i class="fa-solid fa-circle status-dot"></i> {{ order.status }}
-                    </span>
-                </p>
-               <p class="order-date">
-                    <i class="fa-solid fa-calendar-days"></i>
-                    {{ order.created_at.strftime('%b %d, %Y — %I:%M %p') }}
-                   <a class="od-link" href="{{ url_for('order_details', order_id=order.id) }}">View details</a>
-               </p>
-            </div>
+           <div class="order-card oh-card">
+              <div class="oh-thumb">
+                {% if thumbs.get(order.id) %}
+                  <img src="{{ thumbs[order.id] }}" alt="">
+                {% else %}
+                  <span class="oh-thumb-ph"><i class="fa-solid fa-utensils"></i></span>
+                {% endif %}
+              </div>
+              <div class="oh-main">
+                <p class="oh-title">{{ order.items }}</p>
+                <p class="oh-date">{{ order.order_type }} · {{ order.created_at.strftime('%b %d, %Y · %I:%M %p') }}</p>
+                <span class="status-badge status-{{ order.status | lower | replace(' ', '-') }}"><i class="fa-solid fa-circle status-dot"></i> {{ order.status }}</span>
+              </div>
+              <div class="oh-side">
+                <strong class="oh-total">₦{{ order.total }}</strong>
+                <a class="oh-btn" href="{{ url_for('order_details', order_id=order.id) }}">View Details</a>
+              </div>
+           </div>
         {% endfor %}
     {% else %}
         <p>No past orders yet.</p>
